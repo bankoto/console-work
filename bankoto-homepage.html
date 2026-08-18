@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bankoto — Your Back-Office, Solved | AI Back-Office Platform</title>
+<meta name="description" content="Bankoto runs on two engines: Bankoto Console, the agentic back-office dashboard for accounting, tax, payroll and legal, and Bankoto Workforce, forward deployed AI employees for your daily operations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --brand-blue:#2B7EC5;
+    --light-blue:#8ABCE1;
+    --teal:#17A2B8;
+    --warn:#FFC107;
+    --error:#DC3545;
+    --navy:#0E2233;
+    --ink:#16232C;
+    --muted:#5C6B74;
+    --line:#E4EAEE;
+    --bg-gray:#F5F8FA;
+    --bg-blue-tint:#EEF5FB;
+    --white:#FFFFFF;
+    --radius:8px;
+    --wrap:1180px;
+    font-size:16px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;overflow-x:hidden;max-width:100%;}
+  body{overflow-x:hidden;max-width:100%;}
+  body{margin:0;font-family:'Inter','Calibri',-apple-system,sans-serif;color:var(--ink);background:var(--white);-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4{font-family:'Poppins',sans-serif;margin:0;color:var(--navy);letter-spacing:-0.01em;}
+  p{margin:0;line-height:1.6;color:var(--muted);}
+  a{text-decoration:none;color:inherit;}
+  ul{margin:0;padding:0;list-style:none;}
+  img{display:block;max-width:100%;}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 32px;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--brand-blue);background:var(--bg-blue-tint);padding:6px 14px;border-radius:var(--radius);border:1px solid #D6E7F5;}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;padding:14px 26px;border-radius:var(--radius);border:1.5px solid transparent;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease, background .15s ease;white-space:nowrap;}
+  .btn-primary{background:var(--brand-blue);color:#fff;}
+  .btn-primary:hover{background:#256FAF;box-shadow:0 8px 20px -6px rgba(43,126,197,.55);transform:translateY(-1px);}
+  .btn-outline{background:transparent;border-color:var(--navy);color:var(--navy);}
+  .btn-outline:hover{background:var(--navy);color:#fff;}
+  .btn-ghost-white{background:transparent;border-color:rgba(255,255,255,.5);color:#fff;}
+  .btn-ghost-white:hover{background:rgba(255,255,255,.15);border-color:#fff;}
+  .btn-white{background:#fff;color:var(--brand-blue);}
+  .btn-white:hover{transform:translateY(-1px);box-shadow:0 8px 20px -6px rgba(0,0,0,.25);}
+
+
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:var(--wrap);margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand img{width:34px;height:34px;border-radius:6px;}
+  .brand span{font-family:'Poppins',sans-serif;font-weight:700;font-size:20px;color:var(--navy);}
+  nav.links{display:flex;align-items:center;gap:32px;}
+  nav.links a{font-size:14.5px;font-weight:500;color:var(--ink);position:relative;padding:4px 0;}
+  nav.links a:hover{color:var(--brand-blue);}
+  nav.links a.active{color:var(--brand-blue);}
+  nav.links a.active::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--brand-blue);border-radius:2px;}
+  .nav-cta{display:flex;align-items:center;gap:14px;}
+  .nav-cta .btn{padding:11px 20px;font-size:14px;}
+  .nav-cta-mobile{display:none;}
+  .menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:6px;}
+  .menu-toggle span{display:block;width:22px;height:2px;background:var(--navy);margin:5px 0;}
+
+  .nav-dropdown{position:relative;}
+  .nav-dropdown > .dropdown-trigger{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:14.5px;font-weight:500;color:var(--ink);background:none;border:none;cursor:pointer;padding:4px 0;}
+  .nav-dropdown > .dropdown-trigger:hover{color:var(--brand-blue);}
+  .nav-dropdown .chevron{width:10px;height:10px;transition:transform .15s ease;}
+  .nav-dropdown.open .chevron,.nav-dropdown:hover .chevron{transform:rotate(180deg);}
+  .dropdown-panel{position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 24px 48px -20px rgba(14,34,51,.28);padding:10px;width:290px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .15s ease, transform .15s ease;z-index:60;}
+  .nav-dropdown:hover .dropdown-panel,.nav-dropdown.open .dropdown-panel{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(4px);}
+  .dropdown-item{display:flex;gap:12px;align-items:flex-start;padding:10px;border-radius:6px;}
+  .dropdown-item:hover{background:var(--bg-gray);}
+  .dropdown-item .dd-ic{width:34px;height:34px;border-radius:7px;background:var(--bg-blue-tint);display:flex;align-items:center;justify-content:center;flex:none;}
+  .dropdown-item .dd-ic svg{width:17px;height:17px;color:var(--brand-blue);}
+  .dropdown-item .dd-title{display:block;font-family:'Poppins',sans-serif;font-weight:600;font-size:13.5px;color:var(--navy);}
+  .dropdown-item .dd-desc{display:block;font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4;}
+  .dd-tag{display:inline-block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:4px;}
+  .dd-tag.free{background:#EAF7F1;color:#188A5A;}
+  .dd-tag.paid{background:var(--bg-blue-tint);color:var(--brand-blue);}
+  .dropdown-panel.simple{width:180px;}
+  .dropdown-link{display:block;padding:10px 12px;border-radius:6px;font-family:'Poppins',sans-serif;font-weight:600;font-size:13.5px;color:var(--navy);}
+  .dropdown-link:hover{background:var(--bg-gray);color:var(--brand-blue);}
+
+  .ic{width:20px;height:20px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block;}
+
+  /* ---------- Gate hero: the two services, full-bleed split ---------- */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+  .gate-intro{text-align:center;padding:64px 32px 44px;animation:fadeUp .7s ease both;}
+  .gate-intro .eyebrow{margin-bottom:20px;}
+  .gate-intro h1{font-size:36px;font-weight:700;margin-bottom:12px;}
+  .gate-intro p{font-size:16.5px;max-width:480px;margin:0 auto;}
+
+  .gate-split{display:flex;min-height:600px;border-top:1px solid var(--line);}
+  .gate-panel{flex:1;display:flex;align-items:flex-end;position:relative;padding:64px;text-decoration:none;overflow:hidden;transition:flex-grow .35s ease;}
+  .gate-panel:hover{flex-grow:1.2;}
+  .gate-panel::after{position:absolute;right:-30px;bottom:-140px;font-family:'Poppins',sans-serif;font-weight:800;font-size:420px;line-height:1;pointer-events:none;z-index:0;}
+  .gate-console{background:var(--navy);color:#fff;}
+  .gate-console::after{content:"C";color:rgba(255,255,255,.05);}
+  .gate-workforce{background:var(--bg-gray);color:var(--ink);border-left:1px solid var(--line);}
+  .gate-workforce::after{content:"W";color:rgba(43,126,197,.06);}
+
+  .gate-panel-inner{position:relative;z-index:1;max-width:440px;}
+  .gate-console .gate-panel-inner{animation:fadeUp .7s ease .1s both;}
+  .gate-workforce .gate-panel-inner{animation:fadeUp .7s ease .2s both;}
+
+  .gate-label{display:block;font-family:'Poppins',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:22px;}
+  .gate-console .gate-label{color:var(--light-blue);}
+  .gate-workforce .gate-label{color:var(--brand-blue);}
+
+  .gate-panel h2{font-size:44px;line-height:1.08;font-weight:700;margin-bottom:18px;}
+  .gate-console h2{color:#fff;}
+  .gate-workforce h2{color:var(--navy);}
+
+  .gate-panel p{font-size:15.5px;line-height:1.6;margin-bottom:28px;max-width:400px;}
+  .gate-console p{color:#B9CBD8;}
+  .gate-workforce p{color:var(--muted);}
+
+  .gate-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:34px;}
+  .gate-tags span{font-size:12px;font-weight:500;padding:6px 12px;border-radius:6px;}
+  .gate-console .gate-tags span{background:rgba(255,255,255,.1);color:#DCE9F2;}
+  .gate-workforce .gate-tags span{background:#fff;border:1px solid var(--line);color:var(--muted);}
+
+  .gate-cta{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;font-weight:600;font-size:15.5px;transition:gap .2s ease;}
+  .gate-console .gate-cta{color:#fff;}
+  .gate-workforce .gate-cta{color:var(--brand-blue);}
+  .gate-panel:hover .gate-cta{gap:14px;}
+  .gate-cta svg{width:17px;height:17px;}
+
+  /* ---------- Closing CTA ---------- */
+  .close-cta{background:#fff;text-align:center;padding:96px 0;border-top:1px solid var(--line);}
+  .close-cta h2{font-size:30px;margin-bottom:12px;}
+  .close-cta p{font-size:16px;max-width:460px;margin:0 auto 30px;}
+  .close-cta .links-row{display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap;}
+  .close-cta .secondary-link{font-family:'Poppins',sans-serif;font-weight:600;font-size:14.5px;color:var(--brand-blue);}
+  .close-cta .secondary-link:hover{text-decoration:underline;}
+
+  footer{background:#F5F8FA;border-top:1px solid var(--line);padding:64px 0 28px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
+  .foot-brand .brand{margin-bottom:14px;}
+  .foot-brand p{font-size:14px;max-width:260px;margin-bottom:18px;}
+  .foot-col h4{font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;color:var(--navy);text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px;}
+  .foot-col li{margin-bottom:11px;}
+  .foot-col a{font-size:14px;color:var(--muted);}
+  .foot-col a:hover{color:var(--brand-blue);}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  .foot-bottom p{font-size:13px;color:var(--muted);}
+  .foot-social{display:flex;gap:14px;}
+  .foot-social a{width:34px;height:34px;border-radius:6px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);}
+  .foot-social a:hover{color:var(--brand-blue);border-color:var(--brand-blue);}
+
+  @media (max-width:900px){
+    nav.links{display:none;}
+    .menu-toggle{display:block;}
+    .nav-cta{display:none;}
+    .nav-cta-mobile{display:flex;flex-direction:column;gap:10px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line);width:100%;}
+    .nav-cta-mobile .btn{width:100%;}
+    .nav-dropdown{width:100%;}
+    .dropdown-panel{position:static;transform:none;opacity:1;visibility:visible;pointer-events:auto;box-shadow:none;border:none;padding:0 0 0 12px;width:auto;display:none;}
+    .nav-dropdown.open .dropdown-panel{display:block;margin-top:8px;transform:none;}
+    .dropdown-trigger{width:100%;justify-content:space-between;}
+
+    .gate-intro{padding:44px 24px 32px;}
+    .gate-intro h1{font-size:27px;}
+    .gate-split{flex-direction:column;min-height:auto;}
+    .gate-panel{padding:48px 28px;flex:none;}
+    .gate-panel:hover{flex-grow:0;}
+    .gate-panel::after{font-size:200px;bottom:-90px;}
+    .gate-panel h2{font-size:34px;}
+    .gate-workforce{border-left:none;border-top:1px solid var(--line);}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+  }
+
+  .gate-cta .ic{transform:rotate(-90deg);}
+
+</style>
+</head>
+<body>
+
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+<defs>
+<symbol id="ic-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+<symbol id="ic-invoice" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></symbol>
+<symbol id="ic-agent" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.3"/><circle cx="5" cy="6" r="1.6"/><circle cx="19" cy="6" r="1.6"/><circle cx="5" cy="18" r="1.6"/><circle cx="19" cy="18" r="1.6"/><line x1="7" y1="7" x2="10.3" y2="10.3"/><line x1="17" y1="7" x2="13.7" y2="10.3"/><line x1="7" y1="17" x2="10.3" y2="13.7"/><line x1="17" y1="17" x2="13.7" y2="13.7"/></symbol>
+<symbol id="ic-workforce" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M12 7v4M12 11 7 15M12 11l5 4"/></symbol>
+</defs>
+</svg>
+
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="bankoto-homepage.html" class="brand">
+      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wgARCAGQAZADASIAAhEBAxEB/8QAGQABAAMBAQAAAAAAAAAAAAAAAAEDBAUC/8QAGAEBAQEBAQAAAAAAAAAAAAAAAAIBAwT/2gAMAwEAAhADEAAAAu+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjNuamRua2Qa2Qa2Qa2Qa2Qa2Qa2Qa2WcaVHttiJwDQAAAAAAAAAAAPFF1NRA3AAAAAAAAEwPVtEmpTdFg0AAAAAAAAAACqm2q4BgAAAAAAAAAE20yanj3Fg0AAAAAAAAAGUV+/FwAAAAAAAAAAABZfl0zUjKAAAAAAAAARMMz+Zi4AAAAAAAAAAAAm+i3NtE2AAAAAAAAA8e62UxMXAAAAAAAAAAAAC6q/N9ibAAAAAAAAAVW0bNYqQAAAAAAAAAAAJ0U6JoMoAAAAAAAABRdRs+BUgAAAAAAAAAAJiws9kWDQAAAAAAAAIz356iBuAAAAAAAAAAE2EXJiwaAAAAAAAAABXm9YOnPaxNnaxDaxDaxDaxDaxDaxDaxDaxDaxDd658nTs5HrK67m6prQ8+p0GgAAAAAAAAYMOrL24BUgAAAAAAAAAAAX7eXM13GHby6yMoAAAAAAAeWcui2rvwDcAAAAAAAAAAAAAndgnN7jNp4dwaAAAAAArspZy/Hrz34BuAAAAAAAAAAAAAAW9bi9Hn01jn1AAAAAAZtOPZ5w78AAAAAAAAAAAAAAAGrLZm9ifPrh3BoAAAADn9DmVGUduIAAAAAAAAAAAAAACYk7Xrz68/oBoAAAADkdbj3zrHXkAAAAAAAAAAAAAAAmLc3reonh3BoAAAAFfJ6fL6cvI6cwAAAAAAAAAAAAAAGvL1JvQOPYAAAAADNzOhzuvELgAAAAAAAAAAAAAAey3qVXce4TQAAAAAHPxasvbgFSAAAAAAAAAAAAALDz0PWnl1COgAAAAACJhnJp0+O3Glc3KVwpXClcKVwpXClcKVwpXClcKVwpXClfY3J733zuLbY59AygAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/9oADAMBAAIAAwAAACHzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzTzzzzzzzzLDXzzzzzzzzzzzzyv7777777766lrzzzzzzzzzzzxT7777777777433zzzzzzzzzylX777777777776rzzzzzzzzzzlb777777777774bzzzzzzzzzzpb777777777777Lzzzzzzzzzy37777777777775rzzzzzzzzzwr7777777777769Xzzzzzzzzzwn7777777777717zzzzzzzzzzzjLLLLLLLLLIvzj3zzzzzzzzzwIEEEEEEEEEEEFHVXzzzzzzzykMEEEEEEEEEEEEEEVbzzzzzzyqIEEEEEEEEEEEEEEGbzzzzzzzuEEEEEEEEEEEEEEEFH3zzzzzzsEEEEEEEEEEEEEEEFVXzzzzzxIEEEEEEEEEEEEEEEFZXzzzzzyoEEEEEEEEEEEEEEEFhzzzzzzwIEEEEEEEEEEEEEEEGTzzzzzyiIEEEEEEEEEEEEEEXXzzzzzzz2Y000000000000wHfzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz/9oADAMBAAIAAwAAABDzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzDzzzzzzzzfD/zzzzzzzzzzzzxD77777777653fzzzzzzzzzzzjz77777777775p/zzzzzzzzzzlb777777777775fzzzzzzzzzy9f777777777774Xzzzzzzzzzz9b777777777776Pzzzzzzzzzz37777777777777bzzzzzzzzzyn777777777777h7zzzzzzzzzy377777777777L7zzzzzzzzzzyAIIIIIIIIIKRxD/zzzzzzzzzwkIIIIIIIIIIIJJdvzzzzzzzz8gIIIIIIIIIIIIIIXPzzzzzzysIIIIIIIIIIIIIIIJXzzzzzzzwIIIIIIIIIIIIIIIIb/wA88888ACCCCCCCCCCCCCCCCR+888888lCCCCCCCCCCCCCCCCS3888888JCCCCCCCCCCCCCCCCQc888888JCCCCCCCCCCCCCCCFU8888884DCCCCCCCCCCCCCCJSc888888rPOOOOOOOOOOOOABMc8888888888888888888888888888888888888888888888888888888888888888888888888888888//EACgRAAECBQMEAgMBAAAAAAAAAAEAAgMEERMwMVFhEiFAQSAiIzJQYP/aAAgBAgEBPwD+wyH1KxyrHKscqxyrHKscqxyrHKscowiERTNCHbG5gKcwtyw/1yObUIihpjCaKDLGb7xjVDLFHbGwd80U9scIfbNGPrHBHfK40CcamuOCO2RzgE95cckvBq2qsKwrCsKwrCsKwrCsIy5TpNx9p8s9qII1xy4owZosu16iwjDNDhAqVDFGDPFhh7aFPYWGhwQxVwTRQeBOQ6jqGCAKxB4MVvU0hHX5ygq/wTonan5yQ+xPgvNBVO1Pzkh2r4M0/pZTBJj8dfAJoKlTEXrdglxRgzlwAqVMTPV9W4BqmRGBoFVdZurrN1dZurrN1dZurrN1dZurrN1dZurrN1dZurrN0YzB7T5xo0USO5+v+R//xAAnEQABAgUEAgMAAwAAAAAAAAABAAIDBBETMCExUWESQCAiQSNQYP/aAAgBAwEBPwD+4fE8fxX+lf6V/pX+lf6V/pX+lf6Qj9IRQUDXNGOuNry1NeHZYh+2RjvEoGorjKfvlgu0pjOyOWEdcbzpmhDXHFP1zQW/uOMdMrRUpooKY4x1yNaXbJjA0ZJiMA6ivhXwr4V8K+FfCvhXwr4V8ITDQmzjQmTLHIGuOYNXnNCmHMKhRREFRhJoFFNXnPCiljqhMeHiowRDRpTjU+hJxKHxOCOaQz6MJ3i8FDb5zZoz0Rum7D5zx+oHosFXUTdh850609GVZ5PrgnD/ACU9ACpoFLwvBuCYNXnOGlxoFLy3j9nYDsnw3lxNFafwrT+FafwrT+FafwrT+FafwrT+FafwrT+FafwrT+EIDz+Jkm47qHAazb/I/wD/xAApEAABAwIGAQQDAQEAAAAAAAABAAIDBEAREhMUMVFQITAyMyIjQYBC/9oACAEBAAE/Av8AAzkebLFByEiBxvH2wcmvu5Lhr1jcy3LHXMtyEw425Ul1Gbc8J10E3i2dwjdstncXkds+8jtn3jLaS7CbxbS83bBihxbSc3cYwtjwn83TG27uEblrUBhbv+NxgmxoC4kOAWcLOFnCzhZws4WcLOFnCzhZws4WcLOFnCzhZws4WcLOFnCzBBwQc1Bwual2AWoVqFahWoVqFahWoVqFahWoVqFahWoVqFahWoVqFahWoVqFahWq5azlrOQqXhMq3f1MqGnkoPDuLaqPrd4qOpLFFUZuSgcbSqP7L1riFBU/xA42dV9t8Dgqeo/5sn8Ko+y/acpVNNi31sZvipfn4CF+VwTHYiwqfrT+fAD0KpH5hYVh/V4Kkdghx79Yfw8FEcHJnwHv1R8Ez5BR/WPfqT6nwTfkFH9Y9+oP7D4JnyCj+se844BTfafBQjEpnwHvSnAKX5nwVGzFDj3qg4NT/l4Fvq5UzMo9+sODUefA08WY4powHv1x/DwMbMzlBHkbYVnHgGszFU8GAxsDwqm/jiLyoafLYu+JU5/I3rYy5RUjv6mRNaOLJ3xKfTyFx9FtZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOkKWTpNpT0m0o/oQgYP8c//xAAiEAEAAgICAgIDAQAAAAAAAAABABExQCFQMKEQQVFxgJH/2gAIAQEAAT8h/gbCZNIpKYMHcKOdVCC8Qb2nHOsNT80LbLp2Dj4zYVuyqZS18IrdqmGNedu0qYrGtlj52jMetljl21zrLhjnbz1ntmYdZ87eRBQ1lt7U4DVcRXtAt2FK9pbzAo1127N/OyBb1y0TMANgV1wAAAAAAL7Hx0Y2VTYVVVVVVXAOfbe5b5e/hHNNblG2IbucFCrABw6nON1XLLkcM2OktRW95XYzEswb0XUq3vvaTJOdF1LvoDi+oB6DqFfQXQzOaFELb0Nuo7L5+SdFSfuc/wBXmcTiTovanq+ZxLy6L3p6vmcMtDoh/tPV81hHfRFbOHnJV9FZMFA88K30IoNDqGO+hIFIJefidChFQaPO4i6C1FQSWhnjzv1KcVYAY0Qj+zdZ4nARBH2mNEWBG7C9pJJJJJJJJJJJJfYizzF2GJIFfxx//8QAJxABAAIBBAEFAAMAAwAAAAAAAQARYSExQKGRMEFQUXGAgbHB0fH/2gAIAQEAAT8Q/gM6f5O9wRpgwPsjNKnvhL5bA1N/94gptH95UJ1gGzlITc4yOyMIKEbOSoHIVrlBSxWDx1ouUHJU2ad9HHVN5aWaWOy8ZUoX9vKYf2CLHG0QJdffK2IiBxmBYna5RuRmnGqKbn7yjeB4yq47vK2JQGnGorHflC/2l6xxk5bWPqChjiuuWmoJStOMqTygC9ojEbSoOM6XJirjsUMVXHVKXOOzolwW0rVci8uL/wD/AP8A/wD+P7wSFY0umv7NOgb5AuMzdzN3M3czdzN3M3czdzN3M3czdzN3M3czdzN3M3czdzN3M3czdzN3APfuBe/cy9xSx7myKEApIMALYduzfi725Vw0FpmLAtNt4ICP2WwHiby9uaDTzS6Jp7soIfzhVbZjVc66IYbZte6wBZwdWls54hqSFVZSDYPA1eWb8AMXdGUb04Fsy3fgFE9o7C2vgE7c1j4Hdm6zJB6ztEbHwVfveHZ+/Wbn5Hb3wSr1827+RLTT5Hm6zG+CZGs9cn9elx+Ct9bMNH6PWt3Es3wV1pssxZ6x6v1Lh8DnNms1Vnrha+v+ZYvwOs8EIj69ckB10/2OvwGuQM00rT19+E0u/wD34CrFUEqk9mABoev0I6hb15wLsLBoE1+oIGMFoUcDR+EIF5g1gQ9+IJsjfaVIQGsAFG3BTcCaQ/JWjSZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviWtXxP8AruHH+MdEysQzR/Dj/9k=" alt="Bankoto logo">
+      <span>Bankoto</span>
+    </a>
+    <nav class="links">
+      <a href="bankoto-homepage.html" class="active">Home</a>
+      <a href="bankoto-about.html">About Us</a>
+      <div class="nav-dropdown">
+        <button class="dropdown-trigger" type="button">Products <svg class="ic chevron" viewBox="0 0 24 24"><use href="#ic-chevron"/></svg></button>
+        <div class="dropdown-panel">
+          <a class="dropdown-item" href="bankoto-erp.html">
+            <span class="dd-ic"><svg class="ic"><use href="#ic-invoice"/></svg></span>
+            <span>
+              <span class="dd-title">Bankoto ERP</span>
+              <span class="dd-desc">Invoicing, inventory, expenses &amp; payments.</span>
+              <span class="dd-tag free">Free</span>
+            </span>
+          </a>
+          <a class="dropdown-item" href="bankoto-console.html">
+            <span class="dd-ic"><svg class="ic"><use href="#ic-agent"/></svg></span>
+            <span>
+              <span class="dd-title">Bankoto Console</span>
+              <span class="dd-desc">AI agents + licensed experts, on demand.</span>
+              <span class="dd-tag paid">Paid plans</span>
+            </span>
+          </a>
+          <a class="dropdown-item" href="bankoto-workforce.html">
+            <span class="dd-ic"><svg class="ic"><use href="#ic-workforce"/></svg></span>
+            <span>
+              <span class="dd-title">Bankoto Workforce</span>
+              <span class="dd-desc">AI employees, deployed &amp; integrated for you.</span>
+              <span class="dd-tag paid">Paid plans</span>
+            </span>
+          </a>
+        </div>
+      </div>
+      <a href="bankoto-services.html">Services</a>
+      <a href="bankoto-pricing.html">Pricing</a>
+      <div class="nav-dropdown">
+        <button class="dropdown-trigger" type="button">Resources <svg class="ic chevron" viewBox="0 0 24 24"><use href="#ic-chevron"/></svg></button>
+        <div class="dropdown-panel simple">
+          <a class="dropdown-link" href="#blog">Blog</a>
+          <a class="dropdown-link" href="#">Tools</a>
+          <a class="dropdown-link" href="#">Guides</a>
+          <a class="dropdown-link" href="#stories">Case Studies</a>
+        </div>
+      </div>
+      <div class="nav-cta-mobile">
+        <a href="bankoto-contact.html" class="btn btn-outline">Talk to Us</a>
+        <a href="bankoto-pricing.html" class="btn btn-primary">See Plans</a>
+      </div>
+    </nav>
+    <div class="nav-cta">
+      <a href="bankoto-contact.html" class="btn btn-outline" style="padding:10px 18px;">Talk to Us</a>
+      <a href="bankoto-pricing.html" class="btn btn-primary">See Plans</a>
+    </div>
+    <button class="menu-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+
+<section class="gate" id="home">
+  <div class="gate-intro">
+    <span class="eyebrow">Bankoto &middot; Your Back-Office, Solved</span>
+    <h1>Two engines. One back office.</h1>
+    <p>Pick where you start &mdash; most businesses end up running both.</p>
+  </div>
+
+  <div class="gate-split">
+    <a class="gate-panel gate-console" href="bankoto-console.html">
+      <div class="gate-panel-inner">
+        <span class="gate-label">For Bankoto&#39;s team, consultants &amp; clients</span>
+        <h2>Bankoto Console</h2>
+        <p>Agentic workflows across accounting, tax, payroll and legal &mdash; drafted by AI, signed off by licensed professionals, in one dashboard.</p>
+        <div class="gate-tags"><span>Accounting</span><span>Tax</span><span>Payroll</span><span>Legal</span></div>
+        <span class="gate-cta">Enter the Console <svg class="ic"><use href="#ic-chevron"/></svg></span>
+      </div>
+    </a>
+    <a class="gate-panel gate-workforce" href="bankoto-workforce.html">
+      <div class="gate-panel-inner">
+        <span class="gate-label">For our customers &amp; daily operations</span>
+        <h2>Bankoto Workforce</h2>
+        <p>AI employees configured, integrated and trained into your business by our engineers &mdash; answering, selling and supporting, 24/7.</p>
+        <div class="gate-tags"><span>Receptionist</span><span>Sales</span><span>Support</span><span>Compliance</span></div>
+        <span class="gate-cta">Meet the Workforce <svg class="ic"><use href="#ic-chevron"/></svg></span>
+      </div>
+    </a>
+  </div>
+</section>
+
+
+<section class="close-cta" id="get-started">
+  <div class="wrap">
+    <h2>Not sure where to start?</h2>
+    <p>Talk to us &mdash; we&#39;ll map your back office in one call and tell you exactly where to begin.</p>
+    <div class="links-row">
+      <a href="bankoto-contact.html" class="btn btn-primary">Talk to Us</a>
+      <a href="bankoto-pricing.html" class="secondary-link">or see pricing &rarr;</a>
+    </div>
+  </div>
+</section>
+
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="bankoto-homepage.html" class="brand">
+          <span style="font-family:'Poppins',sans-serif;font-weight:700;font-size:20px;color:var(--navy);">Bankoto</span>
+        </a>
+        <p>Your Backoffice. Re-imagined! Run your entire back office powered by AI, guided by experts, delivered from one platform.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="X">X</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="Instagram">IG</a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="bankoto-about.html">About Us</a></li>
+          <li><a href="#blog">Blog</a></li>
+          <li><a href="bankoto-contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="bankoto-erp.html">Bankoto ERP</a></li>
+          <li><a href="bankoto-console.html">Bankoto Console</a></li>
+          <li><a href="bankoto-workforce.html">Bankoto Workforce</a></li>
+          <li><a href="bankoto-services.html">Services</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Get in Touch</h4>
+        <ul>
+          <li><a href="mailto:support@bankoto.me">support@bankoto.me</a></li>
+          <li><a href="#">Lagos, Nigeria</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 Bankoto. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+  const toggle = document.querySelector('.menu-toggle');
+  const links = document.querySelector('nav.links');
+  toggle?.addEventListener('click', () => {
+    const open = links.style.display === 'flex';
+    links.style.display = open ? 'none' : 'flex';
+    links.style.cssText += open ? '' : 'position:absolute;top:100%;left:0;right:0;background:#fff;flex-direction:column;padding:20px 32px;border-bottom:1px solid #E4EAEE;gap:18px;';
+  });
+
+  document.querySelectorAll('.nav-dropdown > .dropdown-trigger').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const dd = btn.closest('.nav-dropdown');
+      document.querySelectorAll('.nav-dropdown.open').forEach(o=>{ if(o!==dd) o.classList.remove('open'); });
+      dd.classList.toggle('open');
+    });
+  });
+  document.addEventListener('click', ()=>{
+    document.querySelectorAll('.nav-dropdown.open').forEach(o=>o.classList.remove('open'));
+  });
+</script>
+
+
+</body>
+</html>
