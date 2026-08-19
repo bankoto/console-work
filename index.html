@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bankoto — Your Back-Office, Solved | AI Back-Office Platform</title>
-<meta name="description" content="Bankoto runs on two engines: Bankoto Console, the agentic back-office dashboard for accounting, tax, payroll and legal, and Bankoto Workforce, forward deployed AI employees for your daily operations.">
+<title>Bankoto Console — The Agentic Back-Office Platform</title>
+<meta name="description" content="Bankoto Console pairs AI agents with licensed accountants, HR professionals and lawyers in one dashboard — for paid clients who need expert services, not just software.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-
   :root{
     --brand-blue:#2B7EC5;
     --light-blue:#8ABCE1;
@@ -37,6 +36,7 @@
   ul{margin:0;padding:0;list-style:none;}
   img{display:block;max-width:100%;}
   .wrap{max-width:var(--wrap);margin:0 auto;padding:0 32px;}
+  section{padding:96px 0;}
   .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--brand-blue);background:var(--bg-blue-tint);padding:6px 14px;border-radius:var(--radius);border:1px solid #D6E7F5;}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;padding:14px 26px;border-radius:var(--radius);border:1.5px solid transparent;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease, background .15s ease;white-space:nowrap;}
   .btn-primary{background:var(--brand-blue);color:#fff;}
@@ -48,6 +48,8 @@
   .btn-white{background:#fff;color:var(--brand-blue);}
   .btn-white:hover{transform:translateY(-1px);box-shadow:0 8px 20px -6px rgba(0,0,0,.25);}
 
+  .topbar{background:var(--navy);color:#DCE9F2;font-size:13px;text-align:center;padding:9px 16px;font-family:'Inter',sans-serif;letter-spacing:.01em;}
+  .topbar strong{color:#fff;}
 
   header.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
   .nav-inner{max-width:var(--wrap);margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
@@ -85,59 +87,91 @@
   .dropdown-link{display:block;padding:10px 12px;border-radius:6px;font-family:'Poppins',sans-serif;font-weight:600;font-size:13.5px;color:var(--navy);}
   .dropdown-link:hover{background:var(--bg-gray);color:var(--brand-blue);}
 
-  .ic{width:20px;height:20px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block;}
+  /* ---------- Console hero ---------- */
+  .console-hero{padding:88px 0 40px;background:radial-gradient(circle at 85% 12%, rgba(43,126,197,.08), transparent 45%),linear-gradient(180deg, #FBFDFE 0%, #F5F9FC 100%);position:relative;overflow:hidden;}
+  .console-hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#D9E6EF 1px, transparent 1px);background-size:22px 22px;-webkit-mask-image:linear-gradient(180deg, rgba(0,0,0,.55), transparent 70%);mask-image:linear-gradient(180deg, rgba(0,0,0,.55), transparent 70%);pointer-events:none;}
+  .console-hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;}
+  .console-hero h1{font-size:48px;line-height:1.1;font-weight:700;margin:22px 0 20px;}
+  .console-hero h1 .accent{color:var(--brand-blue);}
+  .console-hero p.lead{font-size:17.5px;max-width:520px;margin-bottom:28px;}
+  .console-hero .hero-ctas{display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
+  .console-hero .hero-note{margin-top:18px;font-size:13px;color:var(--muted);display:flex;gap:18px;flex-wrap:wrap;}
+  .console-hero .hero-note span{display:flex;gap:7px;align-items:center;}
+  .console-hero .hero-note svg{color:var(--brand-blue);width:15px;height:15px;flex:none;}
 
-  /* ---------- Gate hero: the two services, full-bleed split ---------- */
-  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  /* ---------- Console preview panel ---------- */
+  .panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 30px 60px -25px rgba(14,34,51,.25);overflow:hidden;}
+  .panel-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line);background:#FCFDFE;}
+  .panel-head .dots{display:flex;gap:6px;}
+  .panel-head .dots span{width:9px;height:9px;border-radius:50%;background:#DCE3E8;}
+  .panel-head .title{font-family:'Poppins',sans-serif;font-weight:600;font-size:13.5px;color:var(--navy);}
+  .panel-body{padding:8px;}
+  .row{display:flex;align-items:center;gap:14px;padding:14px 12px;border-radius:6px;}
+  .row:hover{background:var(--bg-gray);}
+  .row .ico{width:38px;height:38px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;font-size:17px;background:var(--bg-blue-tint);color:var(--brand-blue);}
+  .row .body{flex:1;min-width:0;}
+  .row .task{font-size:14.5px;font-weight:600;color:var(--navy);font-family:'Poppins',sans-serif;}
+  .row .sub{font-size:12.5px;color:var(--muted);margin-top:2px;}
+  .pill{font-size:11px;font-weight:600;padding:5px 10px;border-radius:5px;flex:none;font-family:'Poppins',sans-serif;}
+  .pill-ai{background:#EAF3FB;color:var(--brand-blue);}
+  .pill-human{background:#EAF7F1;color:#188A5A;}
+  .pill-done{background:#F2F4F6;color:#5C6B74;}
 
-  .gate-intro{text-align:center;padding:64px 32px 44px;animation:fadeUp .7s ease both;}
-  .gate-intro .eyebrow{margin-bottom:20px;}
-  .gate-intro h1{font-size:36px;font-weight:700;margin-bottom:12px;}
-  .gate-intro p{font-size:16.5px;max-width:480px;margin:0 auto;}
+  .sectors{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#FCFDFE;padding:26px 0;}
+  .sectors .wrap{display:flex;align-items:center;gap:28px;flex-wrap:wrap;justify-content:space-between;}
+  .sectors .label{font-size:12.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;}
+  .sectors .tags{display:flex;gap:28px;flex-wrap:wrap;}
+  .sectors .tags span{font-family:'Poppins',sans-serif;font-weight:600;font-size:14.5px;color:#8A98A1;}
 
-  .gate-split{display:flex;min-height:600px;border-top:1px solid var(--line);}
-  .gate-panel{flex:1;display:flex;align-items:flex-end;position:relative;padding:64px;text-decoration:none;overflow:hidden;transition:flex-grow .35s ease;}
-  .gate-panel:hover{flex-grow:1.2;}
-  .gate-panel::after{position:absolute;right:-30px;bottom:-140px;font-family:'Poppins',sans-serif;font-weight:800;font-size:420px;line-height:1;pointer-events:none;z-index:0;}
-  .gate-console{background:var(--navy);color:#fff;}
-  .gate-console::after{content:"C";color:rgba(255,255,255,.05);}
-  .gate-workforce{background:var(--bg-gray);color:var(--ink);border-left:1px solid var(--line);}
-  .gate-workforce::after{content:"W";color:rgba(43,126,197,.06);}
+  .section-head{max-width:640px;margin:0 auto 56px;text-align:center;}
+  .section-head .eyebrow{margin-bottom:16px;}
+  .section-head h2{font-size:36px;font-weight:700;margin-bottom:14px;}
+  .section-head p{font-size:16.5px;}
 
-  .gate-panel-inner{position:relative;z-index:1;max-width:440px;}
-  .gate-console .gate-panel-inner{animation:fadeUp .7s ease .1s both;}
-  .gate-workforce .gate-panel-inner{animation:fadeUp .7s ease .2s both;}
+  /* ---------- How it works ---------- */
+  .how{background:var(--bg-gray);}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+  .step{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:32px 28px;position:relative;}
+  .step .num{font-family:'Poppins',sans-serif;font-weight:700;font-size:13px;color:var(--brand-blue);background:var(--bg-blue-tint);width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+  .step h3{font-size:19px;font-weight:600;margin-bottom:10px;}
+  .step p{font-size:14.5px;}
+  .step-arrow{position:absolute;top:36px;right:-22px;color:#C7D3DA;font-size:20px;}
+  .step:last-child .step-arrow{display:none;}
 
-  .gate-label{display:block;font-family:'Poppins',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:22px;}
-  .gate-console .gate-label{color:var(--light-blue);}
-  .gate-workforce .gate-label{color:var(--brand-blue);}
+  /* ---------- Services covered ---------- */
+  .covered{background:#fff;}
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .pillars li{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:20px 18px;border-radius:var(--radius);background:var(--bg-gray);border:1px solid var(--line);}
+  .pillars li .ic-wrap{width:38px;height:38px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:var(--bg-blue-tint);}
+  .pillars li .ic-wrap svg{width:19px;height:19px;color:var(--brand-blue);}
+  .pillars li span.label{font-size:14.5px;font-weight:600;font-family:'Poppins',sans-serif;color:var(--navy);}
+  .pillars li span.desc{font-size:13px;color:var(--muted);}
+  .covered-note{text-align:center;margin-top:32px;}
 
-  .gate-panel h2{font-size:44px;line-height:1.08;font-weight:700;margin-bottom:18px;}
-  .gate-console h2{color:#fff;}
-  .gate-workforce h2{color:var(--navy);}
+  /* ---------- Trust ---------- */
+  .trust{background:var(--bg-gray);}
+  .trust-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff;}
+  .trust-col{padding:44px 40px;}
+  .trust-col.ai{background:var(--bg-blue-tint);border-right:1px solid var(--line);}
+  .trust-col.human{background:#FBFDFE;}
+  .trust-col h3{font-size:20px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+  .trust-col h3 svg{width:22px;height:22px;color:var(--brand-blue);}
+  .trust-col.human h3 svg{color:var(--teal);}
+  .trust-col ul li{font-size:14.5px;color:var(--ink);padding:10px 0;border-top:1px solid rgba(0,0,0,.06);display:flex;gap:10px;}
+  .trust-col ul li:first-child{border-top:none;}
+  .trust-col ul li::before{content:"—";color:var(--brand-blue);flex:none;}
 
-  .gate-panel p{font-size:15.5px;line-height:1.6;margin-bottom:28px;max-width:400px;}
-  .gate-console p{color:#B9CBD8;}
-  .gate-workforce p{color:var(--muted);}
+  /* ---------- Paid plan banner ---------- */
+  .plan-banner{background:var(--navy);color:#fff;text-align:center;}
+  .plan-banner h2{color:#fff;font-size:32px;margin-bottom:14px;}
+  .plan-banner p{color:#B9CBD8;max-width:560px;margin:0 auto 28px;font-size:16px;}
+  .plan-banner .hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
 
-  .gate-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:34px;}
-  .gate-tags span{font-size:12px;font-weight:500;padding:6px 12px;border-radius:6px;}
-  .gate-console .gate-tags span{background:rgba(255,255,255,.1);color:#DCE9F2;}
-  .gate-workforce .gate-tags span{background:#fff;border:1px solid var(--line);color:var(--muted);}
-
-  .gate-cta{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;font-weight:600;font-size:15.5px;transition:gap .2s ease;}
-  .gate-console .gate-cta{color:#fff;}
-  .gate-workforce .gate-cta{color:var(--brand-blue);}
-  .gate-panel:hover .gate-cta{gap:14px;}
-  .gate-cta svg{width:17px;height:17px;}
-
-  /* ---------- Closing CTA ---------- */
-  .close-cta{background:#fff;text-align:center;padding:96px 0;border-top:1px solid var(--line);}
-  .close-cta h2{font-size:30px;margin-bottom:12px;}
-  .close-cta p{font-size:16px;max-width:460px;margin:0 auto 30px;}
-  .close-cta .links-row{display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap;}
-  .close-cta .secondary-link{font-family:'Poppins',sans-serif;font-weight:600;font-size:14.5px;color:var(--brand-blue);}
-  .close-cta .secondary-link:hover{text-decoration:underline;}
+  /* ---------- Final CTA ---------- */
+  .cta-final{background:#fff;text-align:center;}
+  .cta-final h2{font-size:34px;margin-bottom:14px;}
+  .cta-final p{max-width:520px;margin:0 auto 32px;font-size:16px;}
+  .cta-final .hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
 
   footer{background:#F5F8FA;border-top:1px solid var(--line);padding:64px 0 28px;}
   .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
@@ -153,43 +187,55 @@
   .foot-social a{width:34px;height:34px;border-radius:6px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);}
   .foot-social a:hover{color:var(--brand-blue);border-color:var(--brand-blue);}
 
+  .ic{width:20px;height:20px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block;}
+
+  [data-reveal]{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease;}
+  [data-reveal].is-visible{opacity:1;transform:translateY(0);}
+
   @media (max-width:900px){
+    section{padding:64px 0;}
+    .console-hero{padding:48px 0 32px;}
+    .console-hero-inner{grid-template-columns:1fr;gap:40px;}
+    .console-hero h1{font-size:34px;}
     nav.links{display:none;}
     .menu-toggle{display:block;}
-    .nav-cta{display:none;}
-    .nav-cta-mobile{display:flex;flex-direction:column;gap:10px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line);width:100%;}
-    .nav-cta-mobile .btn{width:100%;}
+    .steps{grid-template-columns:1fr;}
+    .step-arrow{display:none;}
+    .pillars{grid-template-columns:1fr 1fr;}
+    .trust-grid{grid-template-columns:1fr;}
+    .trust-col.ai{border-right:none;border-bottom:1px solid var(--line);}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+    .sectors .wrap{flex-direction:column;align-items:flex-start;}
     .nav-dropdown{width:100%;}
     .dropdown-panel{position:static;transform:none;opacity:1;visibility:visible;pointer-events:auto;box-shadow:none;border:none;padding:0 0 0 12px;width:auto;display:none;}
     .nav-dropdown.open .dropdown-panel{display:block;margin-top:8px;transform:none;}
     .dropdown-trigger{width:100%;justify-content:space-between;}
-
-    .gate-intro{padding:44px 24px 32px;}
-    .gate-intro h1{font-size:27px;}
-    .gate-split{flex-direction:column;min-height:auto;}
-    .gate-panel{padding:48px 28px;flex:none;}
-    .gate-panel:hover{flex-grow:0;}
-    .gate-panel::after{font-size:200px;bottom:-90px;}
-    .gate-panel h2{font-size:34px;}
-    .gate-workforce{border-left:none;border-top:1px solid var(--line);}
-    .foot-grid{grid-template-columns:1fr 1fr;}
+    .nav-cta{display:none;}
+    .nav-cta-mobile{display:flex;flex-direction:column;gap:10px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line);width:100%;}
+    .nav-cta-mobile .btn{width:100%;}
   }
-
-  .gate-cta .ic{transform:rotate(-90deg);}
-
 </style>
 </head>
 <body>
 
 <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
 <defs>
-<symbol id="ic-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
 <symbol id="ic-invoice" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></symbol>
+<symbol id="ic-accounting" viewBox="0 0 24 24"><line x1="4" y1="20" x2="20" y2="20"/><line x1="7" y1="20" x2="7" y2="11"/><line x1="12" y1="20" x2="12" y2="6"/><line x1="17" y1="20" x2="17" y2="14"/></symbol>
+<symbol id="ic-payroll" viewBox="0 0 24 24"><ellipse cx="12" cy="7" rx="7" ry="3"/><path d="M5 7v10a7 3 0 0 0 14 0V7"/><path d="M5 12a7 3 0 0 0 14 0"/></symbol>
+<symbol id="ic-incorporation" viewBox="0 0 24 24"><path d="M4 10 12 4l8 6"/><rect x="4" y="10" width="16" height="10"/><line x1="8" y1="14" x2="8" y2="20"/><line x1="12" y1="14" x2="12" y2="20"/><line x1="16" y1="14" x2="16" y2="20"/></symbol>
+<symbol id="ic-tax" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 12.5 11 14.5 15.5 9.5"/></symbol>
+<symbol id="ic-hr" viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="2.6"/><path d="M3 19c0-3.3 2.5-5.8 5.5-5.8s5.5 2.5 5.5 5.8"/><circle cx="17" cy="9" r="2"/><path d="M13.5 19c.3-2.6 2-4.6 4-4.6s3.7 2 4 4.6"/></symbol>
+<symbol id="ic-legal" viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="19"/><line x1="4" y1="7" x2="20" y2="7"/><path d="M4 7 2 12a3 3 0 0 0 6 0Z"/><path d="M16 7 14 12a3 3 0 0 0 6 0Z"/><line x1="8" y1="20" x2="16" y2="20"/></symbol>
 <symbol id="ic-agent" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.3"/><circle cx="5" cy="6" r="1.6"/><circle cx="19" cy="6" r="1.6"/><circle cx="5" cy="18" r="1.6"/><circle cx="19" cy="18" r="1.6"/><line x1="7" y1="7" x2="10.3" y2="10.3"/><line x1="17" y1="7" x2="13.7" y2="10.3"/><line x1="7" y1="17" x2="10.3" y2="13.7"/><line x1="17" y1="17" x2="13.7" y2="13.7"/></symbol>
+<symbol id="ic-human-check" viewBox="0 0 24 24"><circle cx="9" cy="7.5" r="3"/><path d="M3 20c0-4 2.8-6.5 6-6.5s6 2.5 6 6.5"/><path d="M15 15.5 17 17.5 21 13"/></symbol>
+<symbol id="ic-check" viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6"/></symbol>
+<symbol id="ic-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
 <symbol id="ic-workforce" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M12 7v4M12 11 7 15M12 11l5 4"/></symbol>
 </defs>
 </svg>
 
+<div class="topbar">Built in Lagos — <strong>real professionals, backed by smart technology</strong> for every back-office workflow</div>
 
 <header class="nav">
   <div class="nav-inner">
@@ -198,7 +244,7 @@
       <span>Bankoto</span>
     </a>
     <nav class="links">
-      <a href="bankoto-homepage.html" class="active">Home</a>
+      <a href="bankoto-homepage.html">Home</a>
       <a href="bankoto-about.html">About Us</a>
       <div class="nav-dropdown">
         <button class="dropdown-trigger" type="button">Products <svg class="ic chevron" viewBox="0 0 24 24"><use href="#ic-chevron"/></svg></button>
@@ -234,10 +280,10 @@
       <div class="nav-dropdown">
         <button class="dropdown-trigger" type="button">Resources <svg class="ic chevron" viewBox="0 0 24 24"><use href="#ic-chevron"/></svg></button>
         <div class="dropdown-panel simple">
-          <a class="dropdown-link" href="#blog">Blog</a>
+          <a class="dropdown-link" href="bankoto-homepage.html#blog">Blog</a>
           <a class="dropdown-link" href="#">Tools</a>
           <a class="dropdown-link" href="#">Guides</a>
-          <a class="dropdown-link" href="#stories">Case Studies</a>
+          <a class="dropdown-link" href="bankoto-homepage.html#stories">Case Studies</a>
         </div>
       </div>
       <div class="nav-cta-mobile">
@@ -253,48 +299,205 @@
   </div>
 </header>
 
-
-<section class="gate" id="home">
-  <div class="gate-intro">
-    <span class="eyebrow">Bankoto &middot; Your Back-Office, Solved</span>
-    <h1>Two engines. One back office.</h1>
-    <p>Pick where you start &mdash; most businesses end up running both.</p>
-  </div>
-
-  <div class="gate-split">
-    <a class="gate-panel gate-console" href="bankoto-console.html">
-      <div class="gate-panel-inner">
-        <span class="gate-label">For Bankoto&#39;s team, consultants &amp; clients</span>
-        <h2>Bankoto Console</h2>
-        <p>Agentic workflows across accounting, tax, payroll and legal &mdash; drafted by AI, signed off by licensed professionals, in one dashboard.</p>
-        <div class="gate-tags"><span>Accounting</span><span>Tax</span><span>Payroll</span><span>Legal</span></div>
-        <span class="gate-cta">Enter the Console <svg class="ic"><use href="#ic-chevron"/></svg></span>
+<section class="console-hero" id="home">
+  <div class="wrap console-hero-inner">
+    <div>
+      <span class="eyebrow" data-reveal>Bankoto Console · Paid Plans</span>
+      <h1 data-reveal>The command center for your back office — <span class="accent">AI agents and licensed experts, working together.</span></h1>
+      <p class="lead" data-reveal>Bankoto Console is where your incorporation, accounting, tax, payroll, HR and legal work actually gets done — drafted by AI, reviewed and signed off by real professionals, all in one dashboard.</p>
+      <div class="hero-ctas" data-reveal>
+        <a href="bankoto-pricing.html" class="btn btn-primary">See Plans &amp; Pricing</a>
+        <a href="bankoto-erp.html" class="btn btn-outline">See Bankoto ERP (Free)</a>
       </div>
-    </a>
-    <a class="gate-panel gate-workforce" href="bankoto-workforce.html">
-      <div class="gate-panel-inner">
-        <span class="gate-label">For our customers &amp; daily operations</span>
-        <h2>Bankoto Workforce</h2>
-        <p>AI employees configured, integrated and trained into your business by our engineers &mdash; answering, selling and supporting, 24/7.</p>
-        <div class="gate-tags"><span>Receptionist</span><span>Sales</span><span>Support</span><span>Compliance</span></div>
-        <span class="gate-cta">Meet the Workforce <svg class="ic"><use href="#ic-chevron"/></svg></span>
+      <div class="hero-note" data-reveal>
+        <span><svg class="ic"><use href="#ic-check"/></svg>Available on paid plans</span>
+        <span><svg class="ic"><use href="#ic-check"/></svg>Licensed &amp; verified professionals</span>
+        <span><svg class="ic"><use href="#ic-check"/></svg>Every deliverable reviewed by a human</span>
       </div>
-    </a>
-  </div>
-</section>
+    </div>
 
-
-<section class="close-cta" id="get-started">
-  <div class="wrap">
-    <h2>Not sure where to start?</h2>
-    <p>Talk to us &mdash; we&#39;ll map your back office in one call and tell you exactly where to begin.</p>
-    <div class="links-row">
-      <a href="bankoto-contact.html" class="btn btn-primary">Talk to Us</a>
-      <a href="bankoto-pricing.html" class="secondary-link">or see pricing &rarr;</a>
+    <div class="panel" data-reveal>
+      <div class="panel-head">
+        <span class="title">Bankoto Console</span>
+        <div class="dots"><span></span><span></span><span></span></div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="ico"><svg class="ic"><use href="#ic-incorporation"/></svg></div>
+          <div class="body">
+            <div class="task">Certificate of Incorporation</div>
+            <div class="sub">Filed with CAC</div>
+          </div>
+          <span class="pill pill-done">Done</span>
+        </div>
+        <div class="row">
+          <div class="ico"><svg class="ic"><use href="#ic-payroll"/></svg></div>
+          <div class="body">
+            <div class="task">July payroll run</div>
+            <div class="sub">Verified by Ngozi O., Chartered Accountant</div>
+          </div>
+          <span class="pill pill-human">Human</span>
+        </div>
+        <div class="row">
+          <div class="ico"><svg class="ic"><use href="#ic-tax"/></svg></div>
+          <div class="body">
+            <div class="task">VAT filing — due Aug 21</div>
+            <div class="sub">Drafted by AI, reviewed by Femi A.</div>
+          </div>
+          <span class="pill pill-human">Human</span>
+        </div>
+        <div class="row">
+          <div class="ico"><svg class="ic"><use href="#ic-legal"/></svg></div>
+          <div class="body">
+            <div class="task">Vendor contract review</div>
+            <div class="sub">Queued for legal sign-off</div>
+          </div>
+          <span class="pill pill-ai">AI</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
+<div class="sectors">
+  <div class="wrap">
+    <span class="label">What you get in the Console</span>
+    <div class="tags">
+      <span>Task Feed</span>
+      <span>Agent + Expert Collaboration</span>
+      <span>Real-Time Status</span>
+      <span>Document Vault</span>
+      <span>Deadline Tracking</span>
+    </div>
+  </div>
+</div>
+
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">How the Console Works</span>
+      <h2>One dashboard. AI drafts it, a professional signs it.</h2>
+      <p>Every task in your Console follows the same loop — nothing reaches you or the government without a licensed professional checking it first.</p>
+    </div>
+    <div class="steps">
+      <div class="step" data-reveal>
+        <div class="num">01</div>
+        <h3>Request lands in your task feed</h3>
+        <p>Submit a request — or let a routine task (a filing deadline, a payroll cycle) trigger automatically. It shows up in your Console instantly.</p>
+        <span class="step-arrow">→</span>
+      </div>
+      <div class="step" data-reveal>
+        <div class="num">02</div>
+        <h3>AI drafts it in real time</h3>
+        <p>Bankoto's AI agents draft the filing, reconcile the numbers, or prepare the document — you can watch progress live in the Console.</p>
+        <span class="step-arrow">→</span>
+      </div>
+      <div class="step" data-reveal>
+        <div class="num">03</div>
+        <h3>Your expert reviews and signs off</h3>
+        <p>A licensed accountant, HR professional or lawyer assigned to your account checks the work against standard before anything is filed, paid or sent.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="covered">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Everything In One Console</span>
+      <h2>All six core services, in one place</h2>
+      <p>Incorporation, accounting, tax, payroll, HR and legal — each with a dedicated professional and its own AI agent, visible in your Console.</p>
+    </div>
+    <ul class="pillars" data-reveal>
+      <li>
+        <span class="ic-wrap"><svg class="ic"><use href="#ic-incorporation"/></svg></span>
+        <span class="label">Incorporation</span>
+        <span class="desc">Company registration &amp; compliance filings.</span>
+      </li>
+      <li>
+        <span class="ic-wrap"><svg class="ic"><use href="#ic-accounting"/></svg></span>
+        <span class="label">Accounting</span>
+        <span class="desc">Bookkeeping, reconciliation &amp; reporting.</span>
+      </li>
+      <li>
+        <span class="ic-wrap"><svg class="ic"><use href="#ic-tax"/></svg></span>
+        <span class="label">Tax</span>
+        <span class="desc">VAT, PAYE, WHT &amp; company tax filings.</span>
+      </li>
+      <li>
+        <span class="ic-wrap"><svg class="ic"><use href="#ic-payroll"/></svg></span>
+        <span class="label">Payroll</span>
+        <span class="desc">Salaries, pensions &amp; statutory deductions.</span>
+      </li>
+      <li>
+        <span class="ic-wrap"><svg class="ic"><use href="#ic-hr"/></svg></span>
+        <span class="label">HR</span>
+        <span class="desc">Contracts, offer letters &amp; HR documentation.</span>
+      </li>
+      <li>
+        <span class="ic-wrap"><svg class="ic"><use href="#ic-legal"/></svg></span>
+        <span class="label">Legal</span>
+        <span class="desc">Contract drafting, review &amp; compliance.</span>
+      </li>
+    </ul>
+    <div class="covered-note" data-reveal>
+      <a href="bankoto-services.html" class="btn btn-outline">See Full Service Details</a>
+    </div>
+  </div>
+</section>
+
+<section class="trust">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Why the Console</span>
+      <h2>Technology for speed. Professionals for judgment.</h2>
+      <p>The Console isn't a chatbot and it isn't a form. It's where AI's speed and a licensed professional's judgment meet on every single task.</p>
+    </div>
+    <div class="trust-grid" data-reveal>
+      <div class="trust-col ai">
+        <h3><svg class="ic"><use href="#ic-agent"/></svg> What the AI handles</h3>
+        <ul>
+          <li>Drafts filings, contracts and payroll calculations instantly</li>
+          <li>Reconciles transactions and flags errors in real time</li>
+          <li>Tracks every statutory deadline automatically</li>
+          <li>Keeps your task feed updated live, day or night</li>
+        </ul>
+      </div>
+      <div class="trust-col human">
+        <h3><svg class="ic"><use href="#ic-human-check"/></svg> What your expert handles</h3>
+        <ul>
+          <li>Reviews and signs off on every deliverable before it goes out</li>
+          <li>Is directly reachable — not a support ticket queue</li>
+          <li>Makes the judgment calls AI shouldn't make alone</li>
+          <li>Stays accountable to you, not just the software</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="plan-banner">
+  <div class="wrap" data-reveal>
+    <span class="eyebrow" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:var(--light-blue);">Paid Plans Only</span>
+    <h2>The Console comes with Bankoto's paid plans</h2>
+    <p>Bankoto ERP stays free forever for your day-to-day tools. The Console — with dedicated professionals and AI agents across all six services — is available on Growth and Scale plans.</p>
+    <div class="hero-ctas">
+      <a href="bankoto-pricing.html" class="btn btn-white">See Plans &amp; Pricing</a>
+      <a href="bankoto-contact.html" class="btn btn-ghost-white">Talk to Sales</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final" id="get-started">
+  <div class="wrap" data-reveal>
+    <h2>Ready to bring in the Console?</h2>
+    <p>Get a dedicated professional and AI agents working on your back office — reviewed, governed, and accountable to you.</p>
+    <div class="hero-ctas">
+      <a href="bankoto-pricing.html" class="btn btn-primary">See Plans &amp; Pricing</a>
+      <a href="bankoto-contact.html" class="btn btn-outline">Talk to Sales</a>
+    </div>
+  </div>
+</section>
 
 <footer id="contact">
   <div class="wrap">
@@ -303,7 +506,7 @@
         <a href="bankoto-homepage.html" class="brand">
           <span style="font-family:'Poppins',sans-serif;font-weight:700;font-size:20px;color:var(--navy);">Bankoto</span>
         </a>
-        <p>Your Backoffice. Re-imagined! Run your entire back office powered by AI, guided by experts, delivered from one platform.</p>
+        <p>Your Backoffice. Solved. Run your entire back office powered by AI, guided by experts, delivered from one platform.</p>
         <div class="foot-social">
           <a href="#" aria-label="X">X</a>
           <a href="#" aria-label="LinkedIn">in</a>
@@ -341,7 +544,6 @@
   </div>
 </footer>
 
-
 <script>
   const toggle = document.querySelector('.menu-toggle');
   const links = document.querySelector('nav.links');
@@ -362,8 +564,12 @@
   document.addEventListener('click', ()=>{
     document.querySelectorAll('.nav-dropdown.open').forEach(o=>o.classList.remove('open'));
   });
-</script>
 
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+</script>
 
 </body>
 </html>
