@@ -54,36 +54,8 @@
   .brand{display:flex;align-items:center;gap:10px;}
   .brand img{width:34px;height:34px;border-radius:6px;}
   .brand span{font-family:'Poppins',sans-serif;font-weight:700;font-size:20px;color:var(--navy);}
-  nav.links{display:flex;align-items:center;gap:32px;}
-  nav.links a{font-size:14.5px;font-weight:500;color:var(--ink);position:relative;padding:4px 0;}
-  nav.links a:hover{color:var(--brand-blue);}
-  nav.links a.active{color:var(--brand-blue);}
-  nav.links a.active::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--brand-blue);border-radius:2px;}
   .nav-cta{display:flex;align-items:center;gap:14px;}
   .nav-cta .btn{padding:11px 20px;font-size:14px;}
-  .nav-cta-mobile{display:none;}
-  .menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:6px;}
-  .menu-toggle span{display:block;width:22px;height:2px;background:var(--navy);margin:5px 0;}
-
-  .nav-dropdown{position:relative;}
-  .nav-dropdown > .dropdown-trigger{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:14.5px;font-weight:500;color:var(--ink);background:none;border:none;cursor:pointer;padding:4px 0;}
-  .nav-dropdown > .dropdown-trigger:hover{color:var(--brand-blue);}
-  .nav-dropdown .chevron{width:10px;height:10px;transition:transform .15s ease;}
-  .nav-dropdown.open .chevron,.nav-dropdown:hover .chevron{transform:rotate(180deg);}
-  .dropdown-panel{position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 24px 48px -20px rgba(14,34,51,.28);padding:10px;width:290px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .15s ease, transform .15s ease;z-index:60;}
-  .nav-dropdown:hover .dropdown-panel,.nav-dropdown.open .dropdown-panel{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(4px);}
-  .dropdown-item{display:flex;gap:12px;align-items:flex-start;padding:10px;border-radius:6px;}
-  .dropdown-item:hover{background:var(--bg-gray);}
-  .dropdown-item .dd-ic{width:34px;height:34px;border-radius:7px;background:var(--bg-blue-tint);display:flex;align-items:center;justify-content:center;flex:none;}
-  .dropdown-item .dd-ic svg{width:17px;height:17px;color:var(--brand-blue);}
-  .dropdown-item .dd-title{display:block;font-family:'Poppins',sans-serif;font-weight:600;font-size:13.5px;color:var(--navy);}
-  .dropdown-item .dd-desc{display:block;font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4;}
-  .dd-tag{display:inline-block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:4px;}
-  .dd-tag.free{background:#EAF7F1;color:#188A5A;}
-  .dd-tag.paid{background:var(--bg-blue-tint);color:var(--brand-blue);}
-  .dropdown-panel.simple{width:180px;}
-  .dropdown-link{display:block;padding:10px 12px;border-radius:6px;font-family:'Poppins',sans-serif;font-weight:600;font-size:13.5px;color:var(--navy);}
-  .dropdown-link:hover{background:var(--bg-gray);color:var(--brand-blue);}
 
   .ic{width:20px;height:20px;stroke:currentColor;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block;}
 
@@ -154,15 +126,7 @@
   .foot-social a:hover{color:var(--brand-blue);border-color:var(--brand-blue);}
 
   @media (max-width:900px){
-    nav.links{display:none;}
-    .menu-toggle{display:block;}
     .nav-cta{display:none;}
-    .nav-cta-mobile{display:flex;flex-direction:column;gap:10px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line);width:100%;}
-    .nav-cta-mobile .btn{width:100%;}
-    .nav-dropdown{width:100%;}
-    .dropdown-panel{position:static;transform:none;opacity:1;visibility:visible;pointer-events:auto;box-shadow:none;border:none;padding:0 0 0 12px;width:auto;display:none;}
-    .nav-dropdown.open .dropdown-panel{display:block;margin-top:8px;transform:none;}
-    .dropdown-trigger{width:100%;justify-content:space-between;}
 
     .gate-intro{padding:44px 24px 32px;}
     .gate-intro h1{font-size:27px;}
@@ -197,59 +161,10 @@
       <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wgARCAGQAZADASIAAhEBAxEB/8QAGQABAAMBAQAAAAAAAAAAAAAAAAEDBAUC/8QAGAEBAQEBAQAAAAAAAAAAAAAAAAIBAwT/2gAMAwEAAhADEAAAAu+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjNuamRua2Qa2Qa2Qa2Qa2Qa2Qa2Qa2WcaVHttiJwDQAAAAAAAAAAAPFF1NRA3AAAAAAAAEwPVtEmpTdFg0AAAAAAAAAACqm2q4BgAAAAAAAAAE20yanj3Fg0AAAAAAAAAGUV+/FwAAAAAAAAAAABZfl0zUjKAAAAAAAAARMMz+Zi4AAAAAAAAAAAAm+i3NtE2AAAAAAAAA8e62UxMXAAAAAAAAAAAAC6q/N9ibAAAAAAAAAVW0bNYqQAAAAAAAAAAAJ0U6JoMoAAAAAAAABRdRs+BUgAAAAAAAAAAJiws9kWDQAAAAAAAAIz356iBuAAAAAAAAAAE2EXJiwaAAAAAAAAABXm9YOnPaxNnaxDaxDaxDaxDaxDaxDaxDaxDaxDd658nTs5HrK67m6prQ8+p0GgAAAAAAAAYMOrL24BUgAAAAAAAAAAAX7eXM13GHby6yMoAAAAAAAeWcui2rvwDcAAAAAAAAAAAAAndgnN7jNp4dwaAAAAAArspZy/Hrz34BuAAAAAAAAAAAAAAW9bi9Hn01jn1AAAAAAZtOPZ5w78AAAAAAAAAAAAAAAGrLZm9ifPrh3BoAAAADn9DmVGUduIAAAAAAAAAAAAAACYk7Xrz68/oBoAAAADkdbj3zrHXkAAAAAAAAAAAAAAAmLc3reonh3BoAAAAFfJ6fL6cvI6cwAAAAAAAAAAAAAAGvL1JvQOPYAAAAADNzOhzuvELgAAAAAAAAAAAAAAey3qVXce4TQAAAAAHPxasvbgFSAAAAAAAAAAAAALDz0PWnl1COgAAAAACJhnJp0+O3Glc3KVwpXClcKVwpXClcKVwpXClcKVwpXClfY3J733zuLbY59AygAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/9oADAMBAAIAAwAAACHzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzTzzzzzzzzLDXzzzzzzzzzzzzyv7777777766lrzzzzzzzzzzzxT7777777777433zzzzzzzzzylX777777777776rzzzzzzzzzzlb777777777774bzzzzzzzzzzpb777777777777Lzzzzzzzzzy37777777777775rzzzzzzzzzwr7777777777769Xzzzzzzzzzwn7777777777717zzzzzzzzzzzjLLLLLLLLLIvzj3zzzzzzzzzwIEEEEEEEEEEEFHVXzzzzzzzykMEEEEEEEEEEEEEEVbzzzzzzyqIEEEEEEEEEEEEEEGbzzzzzzzuEEEEEEEEEEEEEEEFH3zzzzzzsEEEEEEEEEEEEEEEFVXzzzzzxIEEEEEEEEEEEEEEEFZXzzzzzyoEEEEEEEEEEEEEEEFhzzzzzzwIEEEEEEEEEEEEEEEGTzzzzzyiIEEEEEEEEEEEEEEXXzzzzzzz2Y000000000000wHfzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz/9oADAMBAAIAAwAAABDzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzDzzzzzzzzfD/zzzzzzzzzzzzxD77777777653fzzzzzzzzzzzjz77777777775p/zzzzzzzzzzlb777777777775fzzzzzzzzzy9f777777777774Xzzzzzzzzzz9b777777777776Pzzzzzzzzzz37777777777777bzzzzzzzzzyn777777777777h7zzzzzzzzzy377777777777L7zzzzzzzzzzyAIIIIIIIIIKRxD/zzzzzzzzzwkIIIIIIIIIIIJJdvzzzzzzzz8gIIIIIIIIIIIIIIXPzzzzzzysIIIIIIIIIIIIIIIJXzzzzzzzwIIIIIIIIIIIIIIIIb/wA88888ACCCCCCCCCCCCCCCCR+888888lCCCCCCCCCCCCCCCCS3888888JCCCCCCCCCCCCCCCCQc888888JCCCCCCCCCCCCCCCFU8888884DCCCCCCCCCCCCCCJSc888888rPOOOOOOOOOOOOABMc8888888888888888888888888888888888888888888888888888888888888888888888888888888//EACgRAAECBQMEAgMBAAAAAAAAAAEAAgMEERMwMVFhEiFAQSAiIzJQYP/aAAgBAgEBPwD+wyH1KxyrHKscqxyrHKscqxyrHKscowiERTNCHbG5gKcwtyw/1yObUIihpjCaKDLGb7xjVDLFHbGwd80U9scIfbNGPrHBHfK40CcamuOCO2RzgE95cckvBq2qsKwrCsKwrCsKwrCsIy5TpNx9p8s9qII1xy4owZosu16iwjDNDhAqVDFGDPFhh7aFPYWGhwQxVwTRQeBOQ6jqGCAKxB4MVvU0hHX5ygq/wTonan5yQ+xPgvNBVO1Pzkh2r4M0/pZTBJj8dfAJoKlTEXrdglxRgzlwAqVMTPV9W4BqmRGBoFVdZurrN1dZurrN1dZurrN1dZurrN1dZurrN1dZurrN0YzB7T5xo0USO5+v+R//xAAnEQABAgUEAgMAAwAAAAAAAAABAAIDBBETMCExUWESQCAiQSNQYP/aAAgBAwEBPwD+4fE8fxX+lf6V/pX+lf6V/pX+lf6Qj9IRQUDXNGOuNry1NeHZYh+2RjvEoGorjKfvlgu0pjOyOWEdcbzpmhDXHFP1zQW/uOMdMrRUpooKY4x1yNaXbJjA0ZJiMA6ivhXwr4V8K+FfCvhXwr4V8ITDQmzjQmTLHIGuOYNXnNCmHMKhRREFRhJoFFNXnPCiljqhMeHiowRDRpTjU+hJxKHxOCOaQz6MJ3i8FDb5zZoz0Rum7D5zx+oHosFXUTdh850609GVZ5PrgnD/ACU9ACpoFLwvBuCYNXnOGlxoFLy3j9nYDsnw3lxNFafwrT+FafwrT+FafwrT+FafwrT+FafwrT+FafwrT+EIDz+Jkm47qHAazb/I/wD/xAApEAABAwIGAQQDAQEAAAAAAAABAAIDBEAREhMUMVFQITAyMyIjQYBC/9oACAEBAAE/Av8AAzkebLFByEiBxvH2wcmvu5Lhr1jcy3LHXMtyEw425Ul1Gbc8J10E3i2dwjdstncXkds+8jtn3jLaS7CbxbS83bBihxbSc3cYwtjwn83TG27uEblrUBhbv+NxgmxoC4kOAWcLOFnCzhZws4WcLOFnCzhZws4WcLOFnCzhZws4WcLOFnCzBBwQc1Bwual2AWoVqFahWoVqFahWoVqFahWoVqFahWoVqFahWoVqFahWoVqFahWq5azlrOQqXhMq3f1MqGnkoPDuLaqPrd4qOpLFFUZuSgcbSqP7L1riFBU/xA42dV9t8Dgqeo/5sn8Ko+y/acpVNNi31sZvipfn4CF+VwTHYiwqfrT+fAD0KpH5hYVh/V4Kkdghx79Yfw8FEcHJnwHv1R8Ez5BR/WPfqT6nwTfkFH9Y9+oP7D4JnyCj+se844BTfafBQjEpnwHvSnAKX5nwVGzFDj3qg4NT/l4Fvq5UzMo9+sODUefA08WY4powHv1x/DwMbMzlBHkbYVnHgGszFU8GAxsDwqm/jiLyoafLYu+JU5/I3rYy5RUjv6mRNaOLJ3xKfTyFx9FtZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOltZOkKWTpNpT0m0o/oQgYP8c//xAAiEAEAAgICAgIDAQAAAAAAAAABABExQCFQMKEQQVFxgJH/2gAIAQEAAT8h/gbCZNIpKYMHcKOdVCC8Qb2nHOsNT80LbLp2Dj4zYVuyqZS18IrdqmGNedu0qYrGtlj52jMetljl21zrLhjnbz1ntmYdZ87eRBQ1lt7U4DVcRXtAt2FK9pbzAo1127N/OyBb1y0TMANgV1wAAAAAAL7Hx0Y2VTYVVVVVVXAOfbe5b5e/hHNNblG2IbucFCrABw6nON1XLLkcM2OktRW95XYzEswb0XUq3vvaTJOdF1LvoDi+oB6DqFfQXQzOaFELb0Nuo7L5+SdFSfuc/wBXmcTiTovanq+ZxLy6L3p6vmcMtDoh/tPV81hHfRFbOHnJV9FZMFA88K30IoNDqGO+hIFIJefidChFQaPO4i6C1FQSWhnjzv1KcVYAY0Qj+zdZ4nARBH2mNEWBG7C9pJJJJJJJJJJJJfYizzF2GJIFfxx//8QAJxABAAIBBAEFAAMAAwAAAAAAAQARYSExQKGRMEFQUXGAgbHB0fH/2gAIAQEAAT8Q/gM6f5O9wRpgwPsjNKnvhL5bA1N/94gptH95UJ1gGzlITc4yOyMIKEbOSoHIVrlBSxWDx1ouUHJU2ad9HHVN5aWaWOy8ZUoX9vKYf2CLHG0QJdffK2IiBxmBYna5RuRmnGqKbn7yjeB4yq47vK2JQGnGorHflC/2l6xxk5bWPqChjiuuWmoJStOMqTygC9ojEbSoOM6XJirjsUMVXHVKXOOzolwW0rVci8uL/wD/AP8A/wD+P7wSFY0umv7NOgb5AuMzdzN3M3czdzN3M3czdzN3M3czdzN3M3czdzN3M3czdzN3M3czdzN3APfuBe/cy9xSx7myKEApIMALYduzfi725Vw0FpmLAtNt4ICP2WwHiby9uaDTzS6Jp7soIfzhVbZjVc66IYbZte6wBZwdWls54hqSFVZSDYPA1eWb8AMXdGUb04Fsy3fgFE9o7C2vgE7c1j4Hdm6zJB6ztEbHwVfveHZ+/Wbn5Hb3wSr1827+RLTT5Hm6zG+CZGs9cn9elx+Ct9bMNH6PWt3Es3wV1pssxZ6x6v1Lh8DnNms1Vnrha+v+ZYvwOs8EIj69ckB10/2OvwGuQM00rT19+E0u/wD34CrFUEqk9mABoev0I6hb15wLsLBoE1+oIGMFoUcDR+EIF5g1gQ9+IJsjfaVIQGsAFG3BTcCaQ/JWjSZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviZviWtXxP8AruHH+MdEysQzR/Dj/9k=" alt="Bankoto logo">
       <span>Bankoto</span>
     </a>
-    <nav class="links">
-      <a href="bankoto-homepage.html" class="active">Home</a>
-      <a href="bankoto-about.html">About Us</a>
-      <div class="nav-dropdown">
-        <button class="dropdown-trigger" type="button">Products <svg class="ic chevron" viewBox="0 0 24 24"><use href="#ic-chevron"/></svg></button>
-        <div class="dropdown-panel">
-          <a class="dropdown-item" href="bankoto-erp.html">
-            <span class="dd-ic"><svg class="ic"><use href="#ic-invoice"/></svg></span>
-            <span>
-              <span class="dd-title">Bankoto ERP</span>
-              <span class="dd-desc">Invoicing, inventory, expenses &amp; payments.</span>
-              <span class="dd-tag free">Free</span>
-            </span>
-          </a>
-          <a class="dropdown-item" href="bankoto-console.html">
-            <span class="dd-ic"><svg class="ic"><use href="#ic-agent"/></svg></span>
-            <span>
-              <span class="dd-title">Bankoto Console</span>
-              <span class="dd-desc">AI agents + licensed experts, on demand.</span>
-              <span class="dd-tag paid">Paid plans</span>
-            </span>
-          </a>
-          <a class="dropdown-item" href="bankoto-workforce.html">
-            <span class="dd-ic"><svg class="ic"><use href="#ic-workforce"/></svg></span>
-            <span>
-              <span class="dd-title">Bankoto Workforce</span>
-              <span class="dd-desc">AI employees, deployed &amp; integrated for you.</span>
-              <span class="dd-tag paid">Paid plans</span>
-            </span>
-          </a>
-        </div>
-      </div>
-      <a href="bankoto-services.html">Services</a>
-      <a href="bankoto-pricing.html">Pricing</a>
-      <div class="nav-dropdown">
-        <button class="dropdown-trigger" type="button">Resources <svg class="ic chevron" viewBox="0 0 24 24"><use href="#ic-chevron"/></svg></button>
-        <div class="dropdown-panel simple">
-          <a class="dropdown-link" href="#blog">Blog</a>
-          <a class="dropdown-link" href="#">Tools</a>
-          <a class="dropdown-link" href="#">Guides</a>
-          <a class="dropdown-link" href="#stories">Case Studies</a>
-        </div>
-      </div>
-      <div class="nav-cta-mobile">
-        <a href="bankoto-contact.html" class="btn btn-outline">Talk to Us</a>
-        <a href="bankoto-pricing.html" class="btn btn-primary">See Plans</a>
-      </div>
-    </nav>
     <div class="nav-cta">
       <a href="bankoto-contact.html" class="btn btn-outline" style="padding:10px 18px;">Talk to Us</a>
       <a href="bankoto-pricing.html" class="btn btn-primary">See Plans</a>
     </div>
-    <button class="menu-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </header>
 
@@ -340,29 +255,6 @@
     </div>
   </div>
 </footer>
-
-
-<script>
-  const toggle = document.querySelector('.menu-toggle');
-  const links = document.querySelector('nav.links');
-  toggle?.addEventListener('click', () => {
-    const open = links.style.display === 'flex';
-    links.style.display = open ? 'none' : 'flex';
-    links.style.cssText += open ? '' : 'position:absolute;top:100%;left:0;right:0;background:#fff;flex-direction:column;padding:20px 32px;border-bottom:1px solid #E4EAEE;gap:18px;';
-  });
-
-  document.querySelectorAll('.nav-dropdown > .dropdown-trigger').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      const dd = btn.closest('.nav-dropdown');
-      document.querySelectorAll('.nav-dropdown.open').forEach(o=>{ if(o!==dd) o.classList.remove('open'); });
-      dd.classList.toggle('open');
-    });
-  });
-  document.addEventListener('click', ()=>{
-    document.querySelectorAll('.nav-dropdown.open').forEach(o=>o.classList.remove('open'));
-  });
-</script>
 
 
 </body>
