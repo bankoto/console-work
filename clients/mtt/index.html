@@ -47,9 +47,9 @@
     const REPORT_CONTEXT='MTT-Aug-2026-report';
     const SESSION_KEY='mtt-report-password';
     const downloads={
-      'MTT_Innovations_August_2026_Management_Report.pdf':{source:'management-report-v5-20260910.pdf.enc',context:'MTT-Aug-2026-management-report-pdf',type:'application/pdf'},
-      'MTT_Innovations_August_2026_Management_Report.docx':{source:'management-report-v5-20260910.docx.enc',context:'MTT-Aug-2026-management-report-docx',type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'},
-      'MTT_Innovations_August_2026_Accounts_Phase_1_2.xlsx':{source:'accounts-v5-20260910.xlsx.enc',context:'MTT-Aug-2026-accounts-xlsx',type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
+      'MTT_Innovations_August_2026_Management_Report.pdf':{source:'management-report-v6-20260910.pdf.enc',context:'MTT-Aug-2026-management-report-pdf',type:'application/pdf'},
+      'MTT_Innovations_August_2026_Management_Report.docx':{source:'management-report-v6-20260910.docx.enc',context:'MTT-Aug-2026-management-report-docx',type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'},
+      'MTT_Innovations_August_2026_Accounts_Phase_1_2.xlsx':{source:'accounts-v6-20260910.xlsx.enc',context:'MTT-Aug-2026-accounts-xlsx',type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
     };
 
     function hex(value){return new Uint8Array(value.match(/.{2}/g).map(byte=>parseInt(byte,16)))}
@@ -66,7 +66,7 @@
       return crypto.subtle.decrypt({name:'AES-GCM',iv:payload.slice(0,12),additionalData:new TextEncoder().encode(context)},key,payload.slice(12));
     }
     async function openReport(password){
-      const plain=await decryptFile('report-v5-20260910.enc',REPORT_CONTEXT,password);
+      const plain=await decryptFile('report-v6-20260910.enc',REPORT_CONTEXT,password);
       sessionStorage.setItem(SESSION_KEY,password);
       let report=new TextDecoder().decode(plain);
       report=report.replace('</head>','<base href="'+ROOT+'"><meta name="robots" content="noindex,nofollow,noarchive"></head>');
