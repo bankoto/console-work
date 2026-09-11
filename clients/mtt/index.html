@@ -37,12 +37,12 @@
     <a class="home" href="/">Return to Bankoto</a>
   </main>
   <script>
-    const ROOT='/clients/mtt/',SALT=hex('28afaad76335ff7fd72e692d578c6367'),SESSION_KEY='mtt-report-access-v7';
-    const profiles={admin:{source:'report-admin-v7-20260910.enc',context:'MTT-Aug-2026-report-admin-v7'},client:{source:'report-client-v7-20260910.enc',context:'MTT-Aug-2026-report-client-v7'}};
+    const ROOT='/clients/mtt/',SALT=hex('28afaad76335ff7fd72e692d578c6367'),SESSION_KEY='mtt-report-access-v8';
+    const profiles={admin:{source:'report-admin-v8-20260911.enc',context:'MTT-Aug-2026-report-admin-v8'},client:{source:'report-client-v8-20260911.enc',context:'MTT-Aug-2026-report-client-v8'}};
     const downloads={
-      'MTT_Innovations_August_2026_Management_Report.pdf':{source:'management-report-v7-20260910.pdf.enc',context:'MTT-Aug-2026-management-report-pdf-admin-v7',type:'application/pdf'},
-      'MTT_Innovations_August_2026_Management_Report.docx':{source:'management-report-v7-20260910.docx.enc',context:'MTT-Aug-2026-management-report-docx-admin-v7',type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'},
-      'MTT_Innovations_August_2026_Accounts_Phase_1_2.xlsx':{source:'accounts-v7-20260910.xlsx.enc',context:'MTT-Aug-2026-accounts-xlsx-admin-v7',type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
+      'MTT_Innovations_August_2026_Management_Report.pdf':{source:'management-report-v8-20260911.pdf.enc',context:'MTT-Aug-2026-management-report-pdf-admin-v8',type:'application/pdf'},
+      'MTT_Innovations_August_2026_Management_Report.docx':{source:'management-report-v8-20260911.docx.enc',context:'MTT-Aug-2026-management-report-docx-admin-v8',type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'},
+      'MTT_Innovations_August_2026_Accounts_Phase_1_2.xlsx':{source:'accounts-v8-20260911.xlsx.enc',context:'MTT-Aug-2026-accounts-xlsx-admin-v8',type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
     };
     function hex(value){return new Uint8Array(value.match(/.{2}/g).map(byte=>parseInt(byte,16)))}
     function normalized(value){return value.includes('\\@')?value:value.replace('@','\\@')}
