@@ -1,0 +1,6 @@
+{
+  "name": "bankoto-console", "version": "1.0.0", "private": true, "type": "module",
+  "engines": {"node": ">=22"},
+  "scripts": {"build": "node scripts/build.mjs", "dev": "node --env-file=.env.local scripts/dev.mjs", "test": "node --test tests/*.test.mjs", "db:setup": "node --env-file=.env.local scripts/setup.mjs"},
+  "dependencies": {"better-auth": "^1.7.0", "pg": "^8.16.3"}
+}

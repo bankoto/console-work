@@ -1,0 +1,14 @@
+import http from 'node:http';
+import { readFile } from 'node:fs/promises';
+import { createHandler } from '../server/handler.mjs';
+const handler=createHandler();
+http.createServer(async(req,res)=>{
+  const path=new URL(req.url,'http://localhost:3100').pathname;
+  if(path.startsWith('/api/console/')) return handler(req,res);
+  try {
+    if(path.startsWith('/clients')) {res.writeHead(302,{Location:'/console/accounting'});res.end();return;}
+    const asset=path==='/console/app.js'?'web/app.js':path==='/console/styles.css'?'web/styles.css':path.startsWith('/console')?'web/index.html':path==='/'?'index.html':null;
+    if(!asset) {res.writeHead(404);res.end();return;}
+    res.setHeader('Content-Type',asset.endsWith('.js')?'text/javascript':asset.endsWith('.css')?'text/css':'text/html; charset=utf-8');res.end(await readFile(asset));
+  } catch {res.writeHead(500);res.end('Unavailable');}
+}).listen(3100,()=>console.log('Bankoto Console: http://localhost:3100/console/login'));
