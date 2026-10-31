@@ -1,5 +1,6 @@
 export const modules = [
   { id: 'accounting', name: 'Accounting', description: 'Client accounts, reports and financial records.', available: true },
+  { id: 'formation', name: 'Company Formation', description: 'Incorporation progress, client files and completed documents.', available: true },
   { id: 'tax', name: 'Tax', description: 'Tax compliance and client obligations.', available: false },
   { id: 'payroll', name: 'Payroll', description: 'Payroll processing and employee records.', available: false },
   { id: 'legal', name: 'Legal', description: 'Legal documents and client matters.', available: false },

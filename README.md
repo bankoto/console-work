@@ -2,7 +2,7 @@
 
 Bankoto’s shared admin, employee and consultant workspace lives at `/console/login`.
 
-The existing homepage is retained. Legacy `/clients` links redirect to the Accounting workspace. Accounting includes MTT Innovations’ existing August and September 2026 dashboard and six protected exports. Tax, Payroll and Legal are planned modules; administrators can save assignments for them now.
+The existing homepage is retained. Legacy `/clients` links redirect to the Accounting workspace. Accounting includes MTT Innovations’ existing August and September 2026 dashboard and six protected exports. Company Formation supports incorporation jobs, categorized document uploads, working folders and downloadable Output documents. Tax, Payroll and Legal are planned modules; administrators can save assignments for them now.
 
 ## Access
 
@@ -19,6 +19,8 @@ Node 24, Vercel Functions, Better Auth 1.7, PostgreSQL on Neon’s free plan in 
 
 Required server variables: `DATABASE_URL`, `BETTER_AUTH_SECRET`, and `BETTER_AUTH_URL` (`https://www.bankoto.biz` in production). Local `.env.local` uses `http://localhost:3100`.
 
+Company Formation uses a connected private Vercel Blob store with `BLOB_READ_WRITE_TOKEN`. Files upload directly to private storage through five-minute, single-path upload tokens after checking the current employee/consultant account and Formation client assignment. Each file is limited to 20 MB. A server-side metadata check confirms the reserved path, size and content type before making the document available. Downloads stream through an authenticated endpoint; private storage URLs and paths are never returned in document listings. Working and Output folders belong to one client job, and files cannot be moved across client workspaces. Categories can use the suggested labels or custom text. Status updates use optimistic version checks to protect concurrent editing and retain an activity history. A Completed status does not automatically move source documents; the team uploads or moves final deliverables into Output documents.
+
 ```sh
 npm ci
 npm run db:setup
@@ -32,9 +34,10 @@ npm run dev
 ```sh
 npm test
 node --env-file=.env.local scripts/verify.mjs
+node --env-file=.env.local scripts/verify-formation.mjs
 npm run build
 ```
 
-The integration verifier creates disposable accounts and a client, exercises the real sign-in → password change → assignment → report/download flow, and removes its fixtures in `finally`. For a staged deployment, set `VERIFY_BASE_URL` to its URL and `VERIFY_ORIGIN=https://www.bankoto.biz` while using the same database and secret. The Vercel deployment must permit account-authenticated requests.
+The integration verifiers create disposable accounts and clients, exercise real authentication, assignments, private upload, folder/category edits, status changes, and downloads, and remove their fixtures in `finally`. The Formation verifier also checks a file larger than the server upload limit and verifies direct private storage access is blocked. For a staged deployment, set `VERIFY_BASE_URL` to its URL and `VERIFY_ORIGIN=https://www.bankoto.biz` while using the same database and secret. The Vercel deployment must permit account-authenticated requests. `db:setup` also applies the additive Company Formation schema and expands the assignment module constraint.
 
 Deploy to the existing `bankoto/console` Vercel project, stage production with `--prod --skip-domain`, verify it, then promote the tested deployment. The existing project-level `/office` rewrite remains managed separately in Vercel.

@@ -3,6 +3,7 @@ import { fromNodeHeaders, toNodeHandler } from 'better-auth/node';
 import { getServices } from './auth.mjs';
 import { assertAdmin, canAccess, HttpError, modules, specialties, validateMember } from './access.mjs';
 import { connectReport, decryptAsset, downloads, getReport, unsealKey } from './reports.mjs';
+import { formationRoute } from './formation.mjs';
 
 const authPaths = new Set(['/sign-in/email', '/sign-out', '/get-session', '/ok']);
 export const temporaryPassword = () => `Bk!${randomBytes(18).toString('base64url')}9a`;
@@ -76,6 +77,7 @@ export function createHandler(services = getServices) {
       }
       if (member.must_change_password) throw new HttpError(428,'Change your temporary password to continue.');
       const assignments=await assignmentsFor(pool,user.id);
+      if(await formationRoute({path,req,res,url,pool,user,assignments,bodyOf,json})) return;
       if (path === '/api/console/workspace' && req.method === 'GET') {
         const clients = user.role === 'admin'
           ? (await pool.query('SELECT id,name,industry,(report_key IS NOT NULL) AS "reportConnected" FROM console_clients ORDER BY name')).rows
