@@ -23,6 +23,7 @@ export function createFormationWorkspace(ctx) {
       const nextSummary = await api('formation');
       const nextDetail = clientId ? await api(`formation/case?clientId=${encodeURIComponent(clientId)}`) : null;
       if (current !== generation || !root?.isConnected) return;
+      if (nextDetail?.job?.status === 'completed' && detail?.job?.id !== nextDetail.job.id) { selectedArea = 'output'; selectedFolder = ''; }
       summary = nextSummary; detail = nextDetail;
       root.innerHTML = clientId ? detailView() : listView();
       bindFilters();
