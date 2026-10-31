@@ -1,9 +1,61 @@
 {
-  "$schema":"https://openapi.vercel.sh/vercel.json",
-  "buildCommand":"npm run build",
-  "outputDirectory":"dist",
-  "functions":{"api/console.js":{"includeFiles":"clients/mtt/**","maxDuration":30}},
-  "rewrites":[{"source":"/api/console/:path*","destination":"/api/console?route=:path*"},{"source":"/console","destination":"/console/index.html"},{"source":"/console/((?!app\\.js|styles\\.css|formation\\.css).*)","destination":"/console/index.html"}],
-  "redirects":[{"source":"/clients/","destination":"/console/accounting","permanent":false},{"source":"/clients","destination":"/console/accounting","permanent":false},{"source":"/clients/:path*","destination":"/console/accounting","permanent":false}],
-  "headers":[{"source":"/console/:path*","headers":[{"key":"X-Robots-Tag","value":"noindex, nofollow, noarchive"},{"key":"X-Frame-Options","value":"SAMEORIGIN"},{"key":"X-Content-Type-Options","value":"nosniff"}]}]
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/console.js": {
+      "includeFiles": "clients/mtt/**",
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/console/:path*",
+      "destination": "/api/console?route=:path*"
+    },
+    {
+      "source": "/console",
+      "destination": "/console/index.html"
+    },
+    {
+      "source": "/console/((?!app\\.js|styles\\.css|formation\\.css|report-notes\\.js|report-notes\\.css).*)",
+      "destination": "/console/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/clients/",
+      "destination": "/console/accounting",
+      "permanent": false
+    },
+    {
+      "source": "/clients",
+      "destination": "/console/accounting",
+      "permanent": false
+    },
+    {
+      "source": "/clients/:path*",
+      "destination": "/console/accounting",
+      "permanent": false
+    }
+  ],
+  "headers": [
+    {
+      "source": "/console/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    }
+  ]
 }

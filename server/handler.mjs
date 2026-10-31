@@ -5,6 +5,7 @@ import { assertAdmin, canAccess, HttpError, modules, specialties, validateMember
 import { connectReport, decryptAsset, downloads, getReport, unsealKey } from './reports.mjs';
 import { formationRoute } from './formation.mjs';
 import { effectiveAssignments, managerIdOf, myTeam, readTeam, validateClientTeam } from './management.mjs';
+import { reportNotesRoute } from './report-notes.mjs';
 
 const authPaths = new Set(['/sign-in/email', '/sign-out', '/get-session', '/ok']);
 export const temporaryPassword = () => `Bk!${randomBytes(18).toString('base64url')}9a`;
@@ -78,6 +79,7 @@ export function createHandler(services = getServices) {
       }
       if (member.must_change_password) throw new HttpError(428,'Change your temporary password to continue.');
       const assignments=await assignmentsFor(pool,user.id);
+      if(await reportNotesRoute({path,req,res,url,pool,user,member,assignments,bodyOf,json})) return;
       if(await formationRoute({path,req,res,url,pool,user,assignments,bodyOf,json})) return;
       if (path === '/api/console/workspace' && req.method === 'GET') {
         const clients = user.role === 'admin'
@@ -85,7 +87,8 @@ export function createHandler(services = getServices) {
           : (await pool.query('SELECT c.id,c.name,c.industry,(c.report_key IS NOT NULL) AS "reportConnected" FROM console_clients c WHERE c.id=ANY($1::text[]) ORDER BY c.name',[[...new Set(assignments.map(a=>a.clientId))]])).rows;
         const visibleModules=modules.filter(m=>user.role==='admin'||assignments.some(a=>a.moduleId===m.id));
         const teamCount=user.role==='admin' ? Number((await pool.query('SELECT count(*) FROM console_members WHERE active')).rows[0].count) : null;
-        return json(res,200,{clients,modules:visibleModules,assignments,specialties,teamCount});
+        const reportFeedback=user.role==='admin'?(await pool.query('SELECT count(*)::int AS total,count(*) FILTER(WHERE NOT resolved)::int AS open FROM console_report_comments')).rows[0]:null;
+        return json(res,200,{clients,modules:visibleModules,assignments,specialties,teamCount,reportFeedback});
       }
       if (path === '/api/console/team' && req.method === 'GET') {
         assertAdmin(user);

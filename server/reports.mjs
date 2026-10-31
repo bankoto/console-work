@@ -5,6 +5,17 @@ import { HttpError } from './access.mjs';
 
 const reportFile = 'report-admin-v10-20261010.enc';
 const context = 'MTT-Aug-Sep-2026-report-admin-v10';
+export const reportVersion = 'mtt-admin-v10-20261010';
+let reportMetadata;
+export async function getReportMetadata(sealedKey) {
+  if (!reportMetadata) {
+    const html = (await decryptAsset(reportFile, context, unsealKey(sealedKey))).toString('utf8');
+    const data = html.match(/<script id="period-data" type="application\/json">([\s\S]*?)<\/script>/);
+    if (!data) throw new Error('Report context unavailable');
+    reportMetadata = { version: reportVersion, periods: JSON.parse(data[1]) };
+  }
+  return reportMetadata;
+}
 export const downloads = {
   'MTT_Innovations_August_2026_Management_Report.pdf': ['august-management-report-v10-20261010.pdf.enc','MTT-Aug-2026-management-report-pdf-admin-v10','application/pdf'],
   'MTT_Innovations_August_2026_Management_Report.docx': ['august-management-report-v10-20261010.docx.enc','MTT-Aug-2026-management-report-docx-admin-v10','application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
@@ -45,6 +56,22 @@ export async function getReport(sealedKey) {
   html = html.replace('</head>', '<base href="/api/console/report/"><meta name="robots" content="noindex,nofollow,noarchive"></head>');
   // Only known downloads are rewritten; arbitrary paths never reach the filesystem.
   for (const name of Object.keys(downloads)) html = html.replaceAll(name, `/api/console/download?clientId=mtt&name=${encodeURIComponent(name)}`);
-  html = html.replace('</body>', '<a href="/console/accounting" style="position:fixed;bottom:16px;right:18px;z-index:99999;background:#102f4c;color:white;padding:12px 18px;border-radius:9px;font:600 13px Arial;text-decoration:none">← Accounting workspace</a></body>');
+  const bridge = `<script>
+    window.bankotoReport = {
+      clientId: 'mtt', version: '${reportVersion}',
+      state: () => ({period:selectedPeriod,sheet:current,page,search:query,drillKey:activeDrill?document.getElementById('drill-title').textContent:'',drillSearch:activeDrill?document.getElementById('drill-search').value:''}),
+      restore: state => {
+        if(!Object.hasOwn(periodData,state.period))return false;
+        const next=periodData[state.period];
+        if(!['Overview','Management Report'].includes(state.sheet)&&!Object.hasOwn(next.sheets,state.sheet))return false;
+        selectedPeriod=state.period;sheets=next.sheets;document.getElementById('period-select').value=selectedPeriod;
+        renderPeriodChrome();buildNav();select(state.sheet);
+        if(current!=='Overview'&&current!=='Management Report'){query=state.search||'';page=state.page||1;document.getElementById('search').value=query;render();}
+        if(state.drillKey){if(!Object.hasOwn(sheets[current]?.drilldowns||{},state.drillKey))return false;openDrill(state.drillKey);document.getElementById('drill-search').value=state.drillSearch||'';renderDrillTransactions();}
+        return true;
+      }
+    };
+  </script><link rel="stylesheet" href="/console/report-notes.css"><script src="/console/report-notes.js" defer></script>`;
+  html = html.replace('</body>', bridge + '</body>');
   return html;
 }

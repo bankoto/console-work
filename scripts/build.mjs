@@ -5,4 +5,5 @@ await copyFile('index.html','dist/index.html');
 await copyFile('bankoto-homepage.html','dist/bankoto-homepage.html');
 await cp('web','dist/console',{recursive:true});
 await build({entryPoints:['web/app.js'],bundle:true,platform:'browser',target:['es2022'],outfile:'dist/console/app.js',minify:true,legalComments:'none'});
+await build({entryPoints:['web/report-notes.js'],bundle:true,platform:'browser',target:['es2022'],outfile:'dist/console/report-notes.js',minify:true,legalComments:'none'});
 console.log('Built homepage and Bankoto Console. Client reports stay in the protected server function.');

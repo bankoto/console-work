@@ -13,6 +13,7 @@ The existing homepage is retained. Legacy `/clients` links redirect to the Accou
 - An employee or consultant can report to an active employee manager. Managers inherit view and download access to the exact client/module pairs assigned to their active direct and indirect reports. Only direct assignments grant editing. Managers cannot manage accounts or staff assignments. The database rejects self-management, circular reporting lines and consultant managers; reporting-line edits are serialized to prevent concurrent cycles. Inactive members do not extend inherited access.
 - New members receive a generated temporary password which the admin shares directly. No automatic account email is sent. Administrators can reset member passwords; users can change their own password in Settings.
 - Financial dashboards and downloads require a matching Accounting assignment. The existing encrypted client files are bundled into the server function, excluded from public build output, and decrypted only after authorization. The legacy report key is encrypted in the database using the authentication secret. Preserve `BETTER_AUTH_SECRET` across deployments; rotating it requires reconnecting the report.
+- Assigned employees and consultants can annotate report areas or selected text. Comments are stored in PostgreSQL with their author, month, section, search, page, transaction detail and a bounded DOM location plus text excerpt. The report’s Comments panel and the administrator’s Accounting feedback inbox retain all feedback, including resolved comments and older pages. An admin dashboard count surfaces open feedback at sign-in. Clicking a comment restores its context and highlights the referenced area; if the source changes and the location cannot be matched confidently, the original excerpt is retained with an explanation. Administrators can resolve and reopen notes. Inherited manager access allows viewing notes; commenting requires a direct Accounting assignment.
 
 ## Runtime
 
@@ -38,6 +39,7 @@ npm test
 node --env-file=.env.local scripts/verify.mjs
 node --env-file=.env.local scripts/verify-formation.mjs
 node --env-file=.env.local scripts/verify-management.mjs
+node --env-file=.env.local scripts/verify-report-notes.mjs
 npm run build
 ```
 

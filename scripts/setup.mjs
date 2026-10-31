@@ -8,6 +8,7 @@ try {
   await pool.query(await readFile(new URL('../server/schema.sql',import.meta.url),'utf8'));
   await pool.query(await readFile(new URL('../server/formation-schema.sql',import.meta.url),'utf8'));
   await pool.query(await readFile(new URL('../server/management-schema.sql',import.meta.url),'utf8'));
+  await pool.query(await readFile(new URL('../server/report-notes-schema.sql',import.meta.url),'utf8'));
   const existing=await pool.query('SELECT id FROM "user" WHERE email=$1',['bankotofinance@gmail.com']);
   if(existing.rowCount) console.log('Console administrator already exists; password was not changed.');
   else {
