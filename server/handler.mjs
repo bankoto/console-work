@@ -4,6 +4,7 @@ import { getServices } from './auth.mjs';
 import { assertAdmin, canAccess, HttpError, modules, specialties, validateMember } from './access.mjs';
 import { connectReport, decryptAsset, downloads, getReport, unsealKey } from './reports.mjs';
 import { formationRoute } from './formation.mjs';
+import { effectiveAssignments, managerIdOf, myTeam, readTeam, validateClientTeam } from './management.mjs';
 
 const authPaths = new Set(['/sign-in/email', '/sign-out', '/get-session', '/ok']);
 export const temporaryPassword = () => `Bk!${randomBytes(18).toString('base64url')}9a`;
@@ -22,14 +23,14 @@ async function identity(auth, pool, req, allowTemporary = false) {
   const headers = fromNodeHeaders(req.headers);
   const session = await auth.api.getSession({ headers });
   if (!session) throw new HttpError(401,'Please sign in to Bankoto Console.');
-  const { rows } = await pool.query('SELECT * FROM console_members WHERE user_id=$1', [session.user.id]);
+  const { rows } = await pool.query('SELECT m.*,boss.name AS manager_name,EXISTS(SELECT 1 FROM console_members child WHERE child.manager_id=m.user_id AND child.active) AS is_manager FROM console_members m LEFT JOIN "user" boss ON boss.id=m.manager_id WHERE m.user_id=$1', [session.user.id]);
   if (!rows[0]?.active) throw new HttpError(403,'Your console access is inactive. Please contact the administrator.');
   if (rows[0].must_change_password && !allowTemporary) throw new HttpError(428,'Change your temporary password to continue.');
   return { user: session.user, member: rows[0], headers };
 }
 async function audit(pool, actor, action, target) { await pool.query('INSERT INTO console_audit(actor_id,action,target_id) VALUES($1,$2,$3)',[actor,action,target]); }
 async function assignmentsFor(pool, userId) {
-  return (await pool.query('SELECT client_id AS "clientId",module_id AS "moduleId" FROM console_assignments WHERE user_id=$1',[userId])).rows;
+  return effectiveAssignments(pool,userId);
 }
 async function replaceAssignments(db, userId, assignments) {
   for (const a of assignments) {
@@ -62,7 +63,7 @@ export function createHandler(services = getServices) {
       }
       const { user, member, headers } = await identity(auth,pool,req,true);
       if (path === '/api/console/me' && req.method === 'GET') {
-        return json(res,200,{user:{id:user.id,name:user.name,email:user.email,role:user.role,kind:member.kind,specialty:member.specialty,mustChangePassword:member.must_change_password}});
+        return json(res,200,{user:{id:user.id,name:user.name,email:user.email,role:user.role,kind:member.kind,specialty:member.specialty,mustChangePassword:member.must_change_password,isManager:member.is_manager,managerId:member.manager_id,managerName:member.manager_name}});
       }
       if (path === '/api/console/password' && req.method === 'POST') {
         const b=await bodyOf(req);
@@ -81,19 +82,33 @@ export function createHandler(services = getServices) {
       if (path === '/api/console/workspace' && req.method === 'GET') {
         const clients = user.role === 'admin'
           ? (await pool.query('SELECT id,name,industry,(report_key IS NOT NULL) AS "reportConnected" FROM console_clients ORDER BY name')).rows
-          : (await pool.query('SELECT c.id,c.name,c.industry,(c.report_key IS NOT NULL) AS "reportConnected" FROM console_clients c WHERE EXISTS(SELECT 1 FROM console_assignments a WHERE a.client_id=c.id AND a.user_id=$1) ORDER BY c.name',[user.id])).rows;
+          : (await pool.query('SELECT c.id,c.name,c.industry,(c.report_key IS NOT NULL) AS "reportConnected" FROM console_clients c WHERE c.id=ANY($1::text[]) ORDER BY c.name',[[...new Set(assignments.map(a=>a.clientId))]])).rows;
         const visibleModules=modules.filter(m=>user.role==='admin'||assignments.some(a=>a.moduleId===m.id));
         const teamCount=user.role==='admin' ? Number((await pool.query('SELECT count(*) FROM console_members WHERE active')).rows[0].count) : null;
         return json(res,200,{clients,modules:visibleModules,assignments,specialties,teamCount});
       }
       if (path === '/api/console/team' && req.method === 'GET') {
         assertAdmin(user);
-        const team=(await pool.query('SELECT u.id,u.name,u.email,u.role,m.kind,m.specialty,m.active,m.must_change_password AS "mustChangePassword" FROM "user" u JOIN console_members m ON m.user_id=u.id ORDER BY m.created_at')).rows;
-        const all=(await pool.query('SELECT user_id AS "userId",client_id AS "clientId",module_id AS "moduleId" FROM console_assignments')).rows;
-        return json(res,200,{team:team.map(t=>({...t,assignments:all.filter(a=>a.userId===t.id).map(({clientId,moduleId})=>({clientId,moduleId}))}))});
+        return json(res,200,{team:await readTeam(pool)});
+      }
+      if (path === '/api/console/my-team' && req.method === 'GET') {
+        return json(res,200,{team:await myTeam(pool,user.id)});
+      }
+      if (path === '/api/console/client-team' && req.method === 'PATCH') {
+        assertAdmin(user);const data=validateClientTeam(await bodyOf(req));
+        await transaction(pool,async db=>{
+          if(!(await db.query('SELECT id FROM console_clients WHERE id=$1',[data.clientId])).rowCount) throw new HttpError(404,'Client not found.');
+          for(const person of data.members){
+            if(!(await db.query('SELECT m.user_id FROM console_members m JOIN "user" u ON u.id=m.user_id WHERE m.user_id=$1 AND u.role<>$2',[person.userId,'admin'])).rowCount) throw new HttpError(400,'Select an employee or consultant account.');
+            await db.query('DELETE FROM console_assignments WHERE user_id=$1 AND client_id=$2',[person.userId,data.clientId]);
+            for(const moduleId of person.moduleIds) await db.query('INSERT INTO console_assignments(user_id,client_id,module_id) VALUES($1,$2,$3)',[person.userId,data.clientId,moduleId]);
+          }
+          await audit(db,user.id,'client_assignments_updated',data.clientId);
+        });
+        return json(res,200,{ok:true});
       }
       if (path === '/api/console/team' && req.method === 'POST') {
-        assertAdmin(user); const b=await bodyOf(req), data=validateMember(b);
+        assertAdmin(user); const b=await bodyOf(req), data=validateMember(b),managerId=managerIdOf(b);
         if (typeof b.email!=='string' || b.email.length>254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email)) throw new HttpError(400,'Enter a valid email address.');
         // Validate references before creating the managed authentication account.
         for(const a of data.assignments) if(!(await pool.query('SELECT id FROM console_clients WHERE id=$1',[a.clientId])).rowCount) throw new HttpError(400,'Invalid client.');
@@ -101,7 +116,8 @@ export function createHandler(services = getServices) {
         const {user:created}=await auth.api.createUser({headers,body:{email:b.email.trim().toLowerCase(),name:data.name,password,role:'user'}});
         try {
           await transaction(pool,async db=>{
-            await db.query('INSERT INTO console_members(user_id,kind,specialty) VALUES($1,$2,$3)',[created.id,data.kind,data.specialty]);
+            await db.query('SELECT pg_advisory_xact_lock(4815,207)');
+            await db.query('INSERT INTO console_members(user_id,kind,specialty,manager_id) VALUES($1,$2,$3,$4)',[created.id,data.kind,data.specialty,managerId]);
             await replaceAssignments(db,created.id,data.assignments);
             await audit(db,user.id,'member_created',created.id);
           });
@@ -110,13 +126,15 @@ export function createHandler(services = getServices) {
       }
       if (path === '/api/console/team' && req.method === 'PATCH') {
         assertAdmin(user); const b=await bodyOf(req), data=validateMember(b);
-        const target=(await pool.query('SELECT u.role FROM "user" u JOIN console_members m ON m.user_id=u.id WHERE u.id=$1',[b.id])).rows[0];
+        const target=(await pool.query('SELECT u.role,m.manager_id FROM "user" u JOIN console_members m ON m.user_id=u.id WHERE u.id=$1',[b.id])).rows[0];
         if(!target) throw new HttpError(404,'Team member not found.');
         if(target.role==='admin') throw new HttpError(400,'The workspace administrator cannot be changed here.');
         if(typeof b.active!=='boolean') throw new HttpError(400,'Invalid member status.');
+        const managerId=managerIdOf(b,target.manager_id);
         await transaction(pool,async db=>{
+          await db.query('SELECT pg_advisory_xact_lock(4815,207)');
           await db.query('UPDATE "user" SET name=$2,"updatedAt"=now() WHERE id=$1',[b.id,data.name]);
-          await db.query('UPDATE console_members SET kind=$2,specialty=$3,active=$4 WHERE user_id=$1',[b.id,data.kind,data.specialty,b.active]);
+          await db.query('UPDATE console_members SET kind=$2,specialty=$3,active=$4,manager_id=$5 WHERE user_id=$1',[b.id,data.kind,data.specialty,b.active,managerId]);
           await replaceAssignments(db,b.id,data.assignments);
           // Revoke sessions when access changes; removed permissions also take effect on every request.
           await db.query('DELETE FROM "session" WHERE "userId"=$1',[b.id]);
@@ -167,8 +185,10 @@ export function createHandler(services = getServices) {
       }
       throw new HttpError(404,'Not found.');
     } catch(error) {
+      if(error.constraint==='console_manager_hierarchy') return json(res,400,{error:error.message});
+      if(error.constraint==='console_members_manager_id_fkey') return json(res,400,{error:'The selected manager no longer exists. Choose another employee.'});
       const status=error.status && typeof error.status==='number' ? error.status : error.statusCode || 500;
-      if(status>=500) console.error('Console request failed:',error.code || error.name);
+      if(status>=500) console.error('Console request failed:',error.code || error.cause?.code || error.name);
       if(!res.headersSent) json(res,status,{error:status>=500?'The console is temporarily unavailable. Please try again.':error.body?.message||error.message});
       else res.end();
     }

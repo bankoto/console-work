@@ -11,6 +11,9 @@ export function assertAdmin(user) { if (user.role !== 'admin') throw new HttpErr
 export function canAccess(user, assignments, clientId, moduleId) {
   return user.role === 'admin' || assignments.some(a => a.clientId === clientId && a.moduleId === moduleId);
 }
+export function canEdit(user, assignments, clientId, moduleId) {
+  return user.role === 'admin' || assignments.some(a => a.clientId === clientId && a.moduleId === moduleId && a.direct !== false);
+}
 export function validateMember(body) {
   if (!body || typeof body.name !== 'string' || body.name.trim().length < 2 || body.name.length > 100) throw new HttpError(400, 'Enter a name between 2 and 100 characters.');
   if (!['employee', 'consultant'].includes(body.kind)) throw new HttpError(400, 'Select employee or consultant.');

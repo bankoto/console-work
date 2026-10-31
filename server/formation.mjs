@@ -3,7 +3,7 @@ import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { get, head, del } from '@vercel/blob';
 import { handleUpload } from '@vercel/blob/client';
-import { canAccess, HttpError } from './access.mjs';
+import { canAccess, canEdit, HttpError } from './access.mjs';
 import { documentCategories, formationStatuses, maxFormationFileSize, textField, validateCaseUpdate, validateUpload } from './formation-domain.mjs';
 
 function uuid(value) {
@@ -18,16 +18,17 @@ async function transaction(pool, fn) {
 async function event(db, caseId, actor, message, note = '') {
   await db.query('INSERT INTO console_formation_events(id,case_id,actor_id,message,note) VALUES($1,$2,$3,$4,$5)', [randomUUID(), caseId, actor, message, note]);
 }
-async function requireClient(pool, user, assignments, clientId) {
+async function requireClient(pool, user, assignments, clientId, editing = false) {
   if (!canAccess(user, assignments, clientId, 'formation')) throw new HttpError(403, 'This Company Formation client is not assigned to you.');
+  if (editing && !canEdit(user, assignments, clientId, 'formation')) throw new HttpError(403, 'You have manager view access to this client. An administrator must assign you directly to edit its work.');
   const client = (await pool.query('SELECT id,name,industry FROM console_clients WHERE id=$1', [clientId])).rows[0];
   if (!client) throw new HttpError(404, 'Client not found.');
   return client;
 }
-async function requireCase(pool, user, assignments, id) {
+async function requireCase(pool, user, assignments, id, editing = false) {
   const job = (await pool.query('SELECT * FROM console_formation_cases WHERE id=$1', [uuid(id)])).rows[0];
   if (!job) throw new HttpError(404, 'Incorporation job not found.');
-  await requireClient(pool, user, assignments, job.client_id);
+  await requireClient(pool, user, assignments, job.client_id, editing);
   return job;
 }
 const caseFields = 'id,client_id AS "clientId",company_name AS "companyName",status,registration_number AS "registrationNumber",due_date::text AS "dueDate",latest_note AS "latestNote",version,created_at AS "createdAt",updated_at AS "updatedAt",completed_at AS "completedAt"';
@@ -40,21 +41,22 @@ export async function formationRoute({ path, req, res, url, pool, user, assignme
       (SELECT count(*)::int FROM console_formation_files f WHERE f.case_id=j.id AND f.state='ready') AS "fileCount",
       (SELECT count(*)::int FROM console_formation_files f JOIN console_formation_folders d ON d.id=f.folder_id WHERE f.case_id=j.id AND f.state='ready' AND d.area='output') AS "outputCount"
       FROM console_clients c LEFT JOIN console_formation_cases j ON j.client_id=c.id
-      WHERE $1::boolean OR EXISTS(SELECT 1 FROM console_assignments a WHERE a.user_id=$2 AND a.client_id=c.id AND a.module_id='formation')
-      ORDER BY j.updated_at DESC NULLS LAST,c.name`, [user.role === 'admin', user.id])).rows;
-    json(res, 200, { clients: rows, statuses: formationStatuses, categories: documentCategories, maxFileSize: maxFormationFileSize }); return true;
+      WHERE $1::boolean OR c.id=ANY($2::text[])
+      ORDER BY j.updated_at DESC NULLS LAST,c.name`, [user.role === 'admin', [...new Set(assignments.filter(a=>a.moduleId==='formation').map(a=>a.clientId))]])).rows;
+    json(res, 200, { clients: rows.map(c=>({...c,canEdit:canEdit(user,assignments,c.clientId,'formation')})), statuses: formationStatuses, categories: documentCategories, maxFileSize: maxFormationFileSize }); return true;
   }
   if (path === '/api/console/formation/case' && req.method === 'GET') {
     const client = await requireClient(pool, user, assignments, url.searchParams.get('clientId'));
     const job = (await pool.query(`SELECT ${caseFields} FROM console_formation_cases WHERE client_id=$1`, [client.id])).rows[0];
-    if (!job) { json(res, 200, { client, job: null }); return true; }
+    const editable=canEdit(user,assignments,client.id,'formation');
+    if (!job) { json(res, 200, { client, job: null,canEdit:editable }); return true; }
     const folders = (await pool.query('SELECT id,name,area,system_folder AS "systemFolder" FROM console_formation_folders WHERE case_id=$1 ORDER BY area DESC,system_folder DESC,name', [job.id])).rows;
     const files = (await pool.query(`SELECT ${fileFields} FROM console_formation_files f LEFT JOIN "user" u ON u.id=f.uploaded_by WHERE f.case_id=$1 AND f.state='ready' ORDER BY f.ready_at DESC`, [job.id])).rows;
     const events = (await pool.query('SELECT e.id,e.message,e.note,e.created_at AS "createdAt",u.name AS "actorName" FROM console_formation_events e LEFT JOIN "user" u ON u.id=e.actor_id WHERE e.case_id=$1 ORDER BY e.created_at DESC LIMIT 100', [job.id])).rows;
-    json(res, 200, { client, job, folders, files, events }); return true;
+    json(res, 200, { client, job, folders, files, events,canEdit:editable }); return true;
   }
   if (path === '/api/console/formation/case' && req.method === 'POST') {
-    const body = await bodyOf(req), client = await requireClient(pool, user, assignments, body.clientId);
+    const body = await bodyOf(req), client = await requireClient(pool, user, assignments, body.clientId,true);
     const companyName = textField(body.companyName || client.name, 'proposed company name', 180), id = randomUUID();
     try {
       await transaction(pool, async db => {
@@ -66,7 +68,7 @@ export async function formationRoute({ path, req, res, url, pool, user, assignme
     json(res, 201, { id, clientId: client.id }); return true;
   }
   if (path === '/api/console/formation/case' && req.method === 'PATCH') {
-    const body = await bodyOf(req), job = await requireCase(pool, user, assignments, body.id), data = validateCaseUpdate(body);
+    const body = await bodyOf(req), job = await requireCase(pool, user, assignments, body.id,true), data = validateCaseUpdate(body);
     await transaction(pool, async db => {
       const updated = await db.query(`UPDATE console_formation_cases SET company_name=$2,status=$3,registration_number=$4,due_date=$5,latest_note=$6,updated_by=$7,updated_at=now(),version=version+1,
         completed_at=CASE WHEN $3='completed' THEN COALESCE(completed_at,now()) ELSE NULL END WHERE id=$1 AND version=$8 RETURNING id`, [job.id, data.companyName, data.status, data.registrationNumber, data.dueDate, data.note, user.id, data.version]);
@@ -77,7 +79,7 @@ export async function formationRoute({ path, req, res, url, pool, user, assignme
     json(res, 200, { ok: true }); return true;
   }
   if (path === '/api/console/formation/folder' && req.method === 'POST') {
-    const body = await bodyOf(req), job = await requireCase(pool, user, assignments, body.caseId);
+    const body = await bodyOf(req), job = await requireCase(pool, user, assignments, body.caseId,true);
     const name = textField(body.name, 'folder name', 80);
     if (!['working', 'output'].includes(body.area)) throw new HttpError(400, 'Select Working documents or Output documents.');
     const id = randomUUID();
@@ -90,7 +92,7 @@ export async function formationRoute({ path, req, res, url, pool, user, assignme
     json(res, 201, { id }); return true;
   }
   if (path === '/api/console/formation/prepare-upload' && req.method === 'POST') {
-    const body = await bodyOf(req), job = await requireCase(pool, user, assignments, body.caseId), data = validateUpload(body);
+    const body = await bodyOf(req), job = await requireCase(pool, user, assignments, body.caseId,true), data = validateUpload(body);
     const folder = (await pool.query('SELECT id FROM console_formation_folders WHERE id=$1 AND case_id=$2', [uuid(body.folderId), job.id])).rows[0];
     if (!folder) throw new HttpError(400, 'Select a folder belonging to this incorporation job.');
     const id = randomUUID(), safeName = data.filename.replace(/[^a-zA-Z0-9._-]/g, '_'), pathname = `formation/${job.id}/${id}/${safeName}`;
@@ -106,7 +108,7 @@ export async function formationRoute({ path, req, res, url, pool, user, assignme
         let uploadId; try { uploadId = JSON.parse(payload).uploadId; } catch { throw new HttpError(400, 'Invalid upload reservation.'); }
         const file = (await pool.query("SELECT * FROM console_formation_files WHERE id=$1 AND state='pending' AND created_at > now()-interval '1 hour'", [uuid(uploadId)])).rows[0];
         if (!file || file.uploaded_by !== user.id || file.blob_path !== pathname) throw new HttpError(403, 'This upload reservation is not available to your account.');
-        await requireCase(pool, user, assignments, file.case_id);
+        await requireCase(pool, user, assignments, file.case_id,true);
         return { maximumSizeInBytes: file.size, allowedContentTypes: [file.content_type], addRandomSuffix: false, allowOverwrite: false, validUntil: Date.now() + 5 * 60 * 1000 };
       },
     });
@@ -115,7 +117,7 @@ export async function formationRoute({ path, req, res, url, pool, user, assignme
   if (path === '/api/console/formation/finish-upload' && req.method === 'POST') {
     const body = await bodyOf(req), file = (await pool.query('SELECT * FROM console_formation_files WHERE id=$1', [uuid(body.id)])).rows[0];
     if (!file || file.uploaded_by !== user.id) throw new HttpError(404, 'Upload not found.');
-    await requireCase(pool, user, assignments, file.case_id);
+    await requireCase(pool, user, assignments, file.case_id,true);
     if (file.state === 'ready') { json(res, 200, { id: file.id }); return true; }
     let blob;
     try { blob = await head(file.blob_path); } catch (e) { if (e.name === 'BlobNotFoundError') throw new HttpError(409, 'The file upload has not finished. Please retry.'); throw e; }
@@ -129,7 +131,7 @@ export async function formationRoute({ path, req, res, url, pool, user, assignme
   if (path === '/api/console/formation/cancel-upload' && req.method === 'POST') {
     const body = await bodyOf(req), file = (await pool.query("SELECT * FROM console_formation_files WHERE id=$1 AND state='pending'", [uuid(body.id)])).rows[0];
     if (!file || file.uploaded_by !== user.id) throw new HttpError(404, 'Pending upload not found.');
-    await requireCase(pool, user, assignments, file.case_id);
+    await requireCase(pool, user, assignments, file.case_id,true);
     await del(file.blob_path);
     await pool.query("DELETE FROM console_formation_files WHERE id=$1 AND state='pending'", [file.id]);
     json(res, 200, { ok: true }); return true;
@@ -137,7 +139,7 @@ export async function formationRoute({ path, req, res, url, pool, user, assignme
   if (path === '/api/console/formation/file' && req.method === 'PATCH') {
     const body = await bodyOf(req), file = (await pool.query("SELECT * FROM console_formation_files WHERE id=$1 AND state='ready'", [uuid(body.id)])).rows[0];
     if (!file) throw new HttpError(404, 'Document not found.');
-    await requireCase(pool, user, assignments, file.case_id);
+    await requireCase(pool, user, assignments, file.case_id,true);
     const folder = (await pool.query('SELECT id,name FROM console_formation_folders WHERE id=$1 AND case_id=$2', [uuid(body.folderId), file.case_id])).rows[0];
     if (!folder) throw new HttpError(400, 'Choose a folder in the same incorporation workspace.');
     const category = textField(body.category, 'document category', 80);
