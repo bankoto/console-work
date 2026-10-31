@@ -22,7 +22,10 @@ function startNotes() {
     <button type="button" id="bn-selection" hidden>Comment on selection</button><div id="bn-highlight" hidden><span>Referenced area</span></div>`;
   document.body.append(ui);
   const $ = selector => ui.querySelector(selector), panel = $('#bn-panel');
-  function openPanel(open = true) { panel.hidden = !open; $('#bn-toggle').setAttribute('aria-expanded', String(open)); document.body.classList.toggle('bn-open', open); requestAnimationFrame(positionHighlight); }
+  function openPanel(open = true) {
+    panel.hidden = !open; $('#bn-toggle').setAttribute('aria-expanded', String(open)); document.body.classList.toggle('bn-open', open);
+    requestAnimationFrame(() => { positionHighlight(); if(open && active){const card=$(`#bn-list [data-note="${active}"]`);if(card){const header=$('.bn-header');panel.scrollTop+=card.getBoundingClientRect().top-panel.getBoundingClientRect().top-header.getBoundingClientRect().height-12;}} });
+  }
   function message(text = '', error = false) { const el = $('#bn-message'); el.textContent = text; el.classList.toggle('bn-error', error); }
   async function api(path, body, method = body ? 'POST' : 'GET') {
     const response = await fetch('/api/console/' + path, { credentials: 'same-origin', method, headers: { 'Content-Type': 'application/json' }, ...(body ? { body: JSON.stringify(body) } : {}) });
