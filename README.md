@@ -2,7 +2,9 @@
 
 Bankoto’s shared admin, employee and consultant workspace lives at `/console/login`.
 
-The existing homepage is retained. Legacy `/clients` links redirect to the Accounting workspace. Accounting includes MTT Innovations’ existing August and September 2026 dashboard and six protected exports. Company Formation supports incorporation jobs, categorized document uploads, working folders and downloadable Output documents. Tax, Payroll and Legal are planned modules; administrators can save assignments for them now.
+The public homepage is a single platform showcase for Bankoto ERP, Bankoto Console and Bankoto Office, with platform tabs, accessible slideshow controls, technical workflow illustrations and responsive layouts. Both homepage entry files use the same design. The supplied official logo is shared by the homepage and Console through `/assets/bankoto-logo.jpeg`.
+
+Legacy `/clients` links redirect to the Accounting workspace. Accounting includes MTT Innovations’ existing August and September 2026 dashboard and six protected exports. Company Formation supports incorporation jobs, categorized document uploads, working folders and downloadable Output documents. Tax, Payroll and Legal are planned modules; administrators can save assignments for them now.
 
 ## Access
 
