@@ -1,7 +1,6 @@
 const slides = [...document.querySelectorAll('.platform-slide')];
 const tabs = [...document.querySelectorAll('.platform-tab')];
 const stage = document.querySelector('#platform-stage');
-const progress = document.querySelector('.cycle-track');
 const rotation = document.querySelector('#rotation-toggle');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let current = Math.max(0, slides.findIndex(slide => slide.dataset.platform === location.hash.slice(1)));
@@ -18,30 +17,58 @@ const icons = {
   sales: '<path d="M4 20h16M6 16v-4m6 4V8m6 8V4M4 9l6-5 5 2 5-4"/>',
   operations: '<path d="M4 5h16M4 12h16M4 19h16"/><circle cx="9" cy="5" r="2" fill="#fff"/><circle cx="16" cy="12" r="2" fill="#fff"/><circle cx="8" cy="19" r="2" fill="#fff"/>',
 };
-const models = [
-  { core: 'Business core', nodes: [['Invoicing','invoice'],['Inventory','inventory'],['Expenses','expenses'],['Payments','payments']] },
-  { core: 'Client workspace', nodes: [['Clients','clients'],['Experts','experts'],['Accounting','expenses'],['Formation','formation']] },
-  { core: 'Agentic tools', nodes: [['Finance','expenses'],['People','people'],['Sales','sales'],['Operations','operations']] },
-];
-function diagram(model, index) {
-  const centers = [[151,166],[463,166],[463,376],[151,376]];
-  const nodes = model.nodes.map(([label, icon], i) => {
-    const [x,y] = centers[i];
-    return `<g transform="translate(${x-69} ${y-38})"><rect x="0" y="5" width="138" height="76" rx="7" fill="#c7dfea" opacity=".2"/><rect width="138" height="76" rx="7" fill="#fff" stroke="#cbdde9"/><text x="13" y="17" class="diagram-node-id">0${i+1}</text><g transform="translate(57 14)" fill="none" stroke="#5798c1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${icons[icon]}</g><text x="69" y="61" text-anchor="middle" class="diagram-node-label">${label}</text></g>`;
-  }).join('');
-  return `<svg viewBox="0 0 620 520" role="img" aria-label="Illustrated ${['Bankoto ERP','Bankoto Console','Bankoto Office'][index]} workflow: ${model.nodes.map(n=>n[0]).join(', ')} connected through ${model.core.toLowerCase()}."><defs><radialGradient id="glow-${index}"><stop stop-color="#b9d8ed" stop-opacity=".5"/><stop offset="1" stop-color="#e9f4fc" stop-opacity="0"/></radialGradient></defs>
-    <ellipse cx="308" cy="283" rx="223" ry="186" fill="url(#glow-${index})"/><g fill="none" stroke="#bfd5e4" stroke-width=".8"><ellipse cx="308" cy="283" rx="235" ry="110" transform="rotate(-31 308 283)"/><ellipse cx="308" cy="283" rx="235" ry="110" transform="rotate(31 308 283)"/><ellipse cx="308" cy="283" rx="184" ry="179"/><ellipse cx="308" cy="283" rx="206" ry="61"/><path d="M308 66v425M62 283h492" stroke-dasharray="3 7"/><path d="m299 72 9-6 9 6m232 202 6 9-6 9M299 485l9 6 9-6"/></g>
-    <g stroke="#88b7d5" fill="none" stroke-width="1.2"><path d="m151 166 157 117 155-117M151 376l157-93 155 93"/><path d="m151 166 157 117 155-117M151 376l157-93 155 93" stroke="#4a93c4" class="diagram-flow"/></g>
-    <g fill="#6ca7cc"><circle cx="230" cy="224" r="3" class="diagram-pulse"/><circle cx="384" cy="225" r="3" class="diagram-pulse"/><circle cx="230" cy="330" r="3"/><circle cx="385" cy="329" r="3"/></g>${nodes}
-    <g><rect x="237" y="228" width="144" height="116" rx="10" fill="#bed8e8" opacity=".3"/><rect x="237" y="222" width="144" height="116" rx="10" fill="#fff" stroke="#91bad5"/><path d="M250 235h8m-8 0v8m118-8h-8m8 0v8M250 325h8m-8 0v-8m118 8h-8m8 0v-8" stroke="#b3cddd" fill="none"/><image href="/assets/bankoto-logo.jpeg" x="285" y="230" width="48" height="48"/><text x="309" y="295" text-anchor="middle" class="diagram-core-label">${model.core}</text><text x="309" y="315" text-anchor="middle" class="diagram-node-id">BANKOTO / 0${index+1}</text></g>
-    <g class="diagram-coordinate"><text x="302" y="56">Y</text><text x="562" y="286">X</text><text x="60" y="460">FIG. 0${index+1}</text><text x="473" y="460">WORKFLOW MAP</text></g></svg>`;
+function icon(name, x, y, scale = 1) {
+  return '<g transform="translate('+x+' '+y+') scale('+scale+')" fill="none" stroke="#5798c1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'+icons[name]+'</g>';
 }
-document.querySelectorAll('.diagram-host').forEach((host, index) => { host.insertAdjacentHTML('beforeend', diagram(models[index], index)); });
+function illustration(label, content) {
+  return '<svg viewBox="0 0 620 520" role="img" aria-label="'+label+'"><defs><linearGradient id="surface-'+label.split(' ')[0]+'" x2="0" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#d8eaf7"/></linearGradient></defs>'+content+'</svg>';
+}
+const illustrations = [
+  illustration('ERP illustration: invoicing ledger, inventory bars and payment tools.',
+    '<ellipse cx="309" cy="418" rx="242" ry="27" fill="#d6e6f0" opacity=".45"/>'+
+    '<rect x="65" y="103" width="446" height="302" rx="13" fill="#c6dce9" opacity=".35"/>'+
+    '<rect x="65" y="94" width="446" height="302" rx="13" fill="#fff" stroke="#b5cfdf"/>'+
+    '<path d="M65 140h446" stroke="#d7e4ec"/><circle cx="88" cy="117" r="4" fill="#83b6d7"/><circle cx="103" cy="117" r="4" fill="#bed8e9"/><circle cx="118" cy="117" r="4" fill="#dceaf3"/>'+
+    '<text x="145" y="121" class="art-title">Business operations</text><text x="89" y="173" class="art-kicker">INVOICING</text>'+
+    '<path d="M89 192h396M89 244h396M89 296h396M89 348h396" stroke="#e1eaf0"/>'+
+    icon('invoice',92,208)+icon('invoice',92,260)+icon('invoice',92,312)+
+    '<g stroke="#cfdee8" stroke-width="5" stroke-linecap="round"><path d="M134 214h106m-106 12h70M134 266h125m-125 12h83M134 318h92m-92 12h63"/></g>'+
+    '<rect x="325" y="205" width="63" height="23" rx="11" fill="#eaf3fa"/><text x="356" y="221" text-anchor="middle" class="art-small">Draft</text>'+
+    '<rect x="325" y="257" width="63" height="23" rx="11" fill="#dfeff9"/><text x="356" y="273" text-anchor="middle" class="art-small">Sent</text>'+
+    '<rect x="361" y="291" width="185" height="155" rx="12" fill="#c8dde9" opacity=".4"/>'+
+    '<rect x="361" y="283" width="185" height="155" rx="12" fill="url(#surface-ERP)" stroke="#a9c9de"/>'+icon('inventory',378,300)+
+    '<text x="412" y="317" class="art-title">Inventory</text><path d="M382 413h141" stroke="#bdd3e2"/>'+
+    '<rect x="386" y="372" width="20" height="40" rx="3" fill="#bddcef"/><rect x="419" y="351" width="20" height="61" rx="3" fill="#8bbddd"/><rect x="452" y="363" width="20" height="49" rx="3" fill="#a5cce5"/><rect x="485" y="335" width="20" height="77" rx="3" fill="#5798c1"/>'+
+    '<rect x="88" y="376" width="229" height="59" rx="10" fill="#fff" stroke="#bdd4e3"/>'+icon('payments',104,394)+'<text x="139" y="410" class="art-title">Payments &amp; expenses</text>'),
+  illustration('Console illustration: a client folder, assigned experts and specialist documents.',
+    '<ellipse cx="316" cy="435" rx="231" ry="23" fill="#d6e6f0" opacity=".45"/>'+
+    '<path d="M154 148q0-14 14-14h95l29 30h205q17 0 17 17v209q0 17-17 17H171q-17 0-17-17Z" fill="#c5deee" stroke="#a4c6dd"/>'+
+    '<rect x="180" y="178" width="350" height="235" rx="12" fill="#d9e8f2" opacity=".5"/>'+
+    '<rect x="180" y="170" width="350" height="235" rx="12" fill="#fff" stroke="#b2ccde"/>'+
+    '<image href="/assets/bankoto-logo.jpeg" x="199" y="188" width="33" height="33"/><text x="246" y="211" class="art-title">Client workspace</text>'+
+    '<path d="M201 235h306" stroke="#dfE9f0"/>'+icon('expenses',209,254)+'<text x="246" y="271" class="art-label">Accounting</text>'+icon('formation',209,301)+'<text x="246" y="318" class="art-label">Company formation</text>'+
+    '<g fill="#dce9f2"><rect x="437" y="258" width="52" height="9" rx="4"/><rect x="437" y="305" width="52" height="9" rx="4"/></g>'+
+    '<rect x="56" y="209" width="155" height="130" rx="12" fill="#c7deed" opacity=".4"/><rect x="56" y="201" width="155" height="130" rx="12" fill="url(#surface-Console)" stroke="#a5c6dd"/>'+
+    '<text x="77" y="230" class="art-title">Assigned team</text><circle cx="90" cy="270" r="20" fill="#fff" stroke="#b9d3e4"/><circle cx="132" cy="270" r="20" fill="#fff" stroke="#b9d3e4"/><circle cx="174" cy="270" r="20" fill="#fff" stroke="#b9d3e4"/>'+
+    icon('people',78,258)+icon('people',120,258)+icon('people',162,258)+'<text x="133" y="311" text-anchor="middle" class="art-small">Experts, connected</text>'+
+    '<rect x="330" y="349" width="222" height="111" rx="11" fill="#d6e5ef" opacity=".5"/><rect x="330" y="341" width="222" height="111" rx="11" fill="#f9fcff" stroke="#a9c9df"/>'+icon('invoice',348,361)+
+    '<text x="385" y="377" class="art-title">Client documents</text><path d="M352 398h174m-174 13h126m-126 13h148" stroke="#c6dbe9" stroke-width="4" stroke-linecap="round"/>'),
+  illustration('Office illustration: an isometric toolkit with finance, people, sales and operations tools.',
+    '<ellipse cx="310" cy="445" rx="225" ry="25" fill="#d4e5f0" opacity=".5"/>'+
+    '<path d="m310 222 218 111v29L310 473 92 362v-29Z" fill="#c4ddec" opacity=".65"/><path d="m310 222 218 111-218 111L92 333Z" fill="#e8f3fa" stroke="#aacbe0"/>'+
+    '<path d="m310 169 218 111v29L310 420 92 309v-29Z" fill="#d1e5f3" stroke="#b2d0e4"/><path d="m310 169 218 111-218 111L92 280Z" fill="#f4faff" stroke="#a8c9df"/>'+
+    '<path d="m310 102 218 111v29L310 353 92 242v-29Z" fill="#d7eaf7" stroke="#a7c8df"/><path d="m310 102 218 111-218 111L92 213Z" fill="url(#surface-Office)" stroke="#91b9d4"/>'+
+    '<path d="m202 158 218 111M310 102v222m-108-56 218-111" stroke="#c0d9e9"/>'+
+    '<g transform="translate(281 126)"><rect width="58" height="46" rx="10" fill="#fff" stroke="#b8d2e3"/>'+icon('expenses',17,10)+'</g><text x="310" y="188" text-anchor="middle" class="art-small">Finance</text>'+
+    '<g transform="translate(174 182)"><rect width="58" height="46" rx="10" fill="#fff" stroke="#b8d2e3"/>'+icon('people',17,10)+'</g><text x="203" y="244" text-anchor="middle" class="art-small">People</text>'+
+    '<g transform="translate(388 182)"><rect width="58" height="46" rx="10" fill="#fff" stroke="#b8d2e3"/>'+icon('sales',17,10)+'</g><text x="417" y="244" text-anchor="middle" class="art-small">Sales</text>'+
+    '<g transform="translate(281 237)"><rect width="58" height="46" rx="10" fill="#fff" stroke="#b8d2e3"/>'+icon('operations',17,10)+'</g><text x="310" y="300" text-anchor="middle" class="art-small">Operations</text>'+
+    '<text x="310" y="382" text-anchor="middle" class="art-kicker">BANKOTO OFFICE</text><path d="m310 397 25 13-25 13-25-13Z" fill="#87b6d6" opacity=".6"/>')
+];
+document.querySelectorAll('.diagram-host').forEach((host, index) => { host.insertAdjacentHTML('beforeend', illustrations[index]); });
 function schedule() {
-  clearTimeout(timer); progress.classList.remove('running','paused');
-  if (!autoplay) return;
-  void progress.offsetWidth; progress.classList.add('running');
-  if (hovering || document.hidden) { progress.classList.add('paused'); return; }
+  clearTimeout(timer);
+  if (!autoplay || hovering || document.hidden) return;
   timer = setTimeout(() => selectSlide((current + 1) % slides.length, false), 9000);
 }
 function updatePlayback() {
@@ -55,7 +82,6 @@ function selectSlide(index, manual = true) {
   if (manual) autoplay = false;
   slides.forEach((slide, i) => { slide.hidden = i !== current; slide.classList.toggle('is-active', i === current); });
   tabs.forEach((tab, i) => { tab.setAttribute('aria-selected', String(i === current)); tab.tabIndex = i === current ? 0 : -1; });
-  document.querySelector('#slide-current').textContent = String(current + 1).padStart(2,'0');
   if (manual) history.replaceState({},'',`#${slides[current].dataset.platform}`);
   document.querySelector('.platform-menu').open = false;
   updatePlayback(); schedule();

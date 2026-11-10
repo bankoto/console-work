@@ -47,3 +47,6 @@
   .platform-rail{padding-top:15px;margin-bottom:24px}.platform-tabs{gap:9px}
   .platform-tab{min-height:46px;padding:10px 4px;gap:6px;border-radius:8px}
 }
+
+/* Individual product illustrations and simplified navigation labels. */
+.platform-id:before{display:none}.platform-id{gap:0}.platform-tab{min-height:58px}.art-title{font:600 14px var(--sans);fill:#26485e}.art-label{font:500 14px var(--sans);fill:#42637b}.art-small{font:500 12px var(--sans);fill:#52768f}.art-kicker{font:600 10px var(--sans);letter-spacing:1.5px;fill:#64869e}@media(max-width:900px){.platform-tab{min-height:48px}}@media(max-width:600px){.platform-tab{min-height:46px}}
