@@ -72,6 +72,7 @@ document.querySelector('.platform-tabs').addEventListener('keydown', event => {
 stage.addEventListener('mouseenter', () => { hovering = true; schedule(); });
 stage.addEventListener('mouseleave', () => { hovering = false; schedule(); });
 document.querySelector('.showcase').addEventListener('focusin', () => { autoplay = false; updatePlayback(); schedule(); });
+document.querySelector('.platform-menu').addEventListener('focusin', () => { autoplay = false; updatePlayback(); schedule(); });
 document.addEventListener('visibilitychange', schedule);
 reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) { autoplay = false; updatePlayback(); schedule(); } });
 window.addEventListener('hashchange', () => { const index = slides.findIndex(slide=>slide.dataset.platform === location.hash.slice(1)); if(index>=0)selectSlide(index); });
