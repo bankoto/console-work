@@ -3,9 +3,9 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { HttpError } from './access.mjs';
 
-const reportFile = 'report-admin-v10-20261010.enc';
-const context = 'MTT-Aug-Sep-2026-report-admin-v10';
-export const reportVersion = 'mtt-admin-v10-20261010';
+const reportFile = 'report-admin-v11-20261111.enc';
+const context = 'MTT-Aug-Oct-2026-report-admin-v11';
+export const reportVersion = 'mtt-admin-v11-20261111';
 let reportMetadata;
 export async function getReportMetadata(sealedKey) {
   if (!reportMetadata) {
@@ -23,6 +23,9 @@ export const downloads = {
   'MTT_Innovations_September_2026_Management_Report.pdf': ['september-management-report-v10-20261010.pdf.enc','MTT-Sep-2026-management-report-pdf-admin-v10','application/pdf'],
   'MTT_Innovations_September_2026_Management_Report.docx': ['september-management-report-v10-20261010.docx.enc','MTT-Sep-2026-management-report-docx-admin-v10','application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
   'MTT_Innovations_September_2026_Financial_Report.xlsx': ['september-accounts-v10-20261010.xlsx.enc','MTT-Sep-2026-accounts-xlsx-admin-v10','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+  'MTT_Innovations_October_2026_Management_Report.pdf': ['october-management-report-v11-20261111.pdf.enc','MTT-Oct-2026-management-report-pdf-admin-v11','application/pdf'],
+  'MTT_Innovations_October_2026_Management_Report.docx': ['october-management-report-v11-20261111.docx.enc','MTT-Oct-2026-management-report-docx-admin-v11','application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+  'MTT_Innovations_October_2026_Financial_Report.xlsx': ['october-accounts-v11-20261111.xlsx.enc','MTT-Oct-2026-accounts-xlsx-admin-v11','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
 };
 function wrappingKey() { return createHash('sha256').update(process.env.BETTER_AUTH_SECRET).digest(); }
 export function sealKey(key) {
